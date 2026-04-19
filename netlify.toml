@@ -2,17 +2,53 @@
   publish = "."
   functions = "netlify/functions"
 
-# Netlify Identity is enabled via the dashboard; Git Gateway is not used.
-# User-generated content is stored in Netlify Blobs via functions.
+# ─── Security headers ────────────────────────────────────────────────
+# Applied to every response. Values chosen with defense-in-depth in mind:
+# Toast UI Editor already sanitises rendered markdown (DOMPurify under the
+# hood), but CSP gives us a second line of defence against XSS.
+#
+# If you add a new CDN or embed, remember to extend the matching directive.
+# ---------------------------------------------------------------------
 
 [[headers]]
   for = "/*"
   [headers.values]
+    # Click-jacking, MIME sniffing, referrer leakage
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Friendly URLs for the dynamic pages
+    # HSTS — force HTTPS for 2 years, include subdomains, eligible for preload
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+    # Block unused browser APIs
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), ambient-light-sensor=(), interest-cohort=()"
+
+    # Content-Security-Policy
+    #   - 'self'               allow resources from endo-wiki-31401.netlify.app
+    #   - Toast UI CDN         editor + viewer assets
+    #   - Google Fonts         Lora, Source Serif 4, DM Sans
+    #   - Netlify Identity     signup/login widget + API
+    #   - data: images         inline thumbnails written by the composer
+    #   - 'unsafe-inline' (style/script) — required because the designed pages
+    #     ship inline <style> and small inline <script> bootstrapping. Using
+    #     nonces would require a build step we deliberately don't have.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://uicdn.toast.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://uicdn.toast.com; font-src 'self' data: https://fonts.gstatic.com https://uicdn.toast.com; img-src 'self' data: blob: https:; connect-src 'self' https://identity.netlify.com https://api.netlify.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+
+# Long cache for immutable assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+# API responses should never be cached aggressively (get.js/list.js set their
+# own short cache headers in code for reads; writes must never be cached)
+[[headers]]
+  for = "/api/publish"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+
+# ─── Friendly URLs ───────────────────────────────────────────────────
 [[redirects]]
   from = "/a/*"
   to = "/article.html?slug=:splat"
@@ -22,3 +58,14 @@
   from = "/r/*"
   to = "/review.html?slug=:splat"
   status = 200
+
+# The old Decap CMS admin directory is gone — redirect to the composer
+[[redirects]]
+  from = "/admin"
+  to = "/compose.html"
+  status = 301
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/compose.html"
+  status = 301
