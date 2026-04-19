@@ -2,124 +2,258 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>EndoWiki — a knowledge base for endodontists</title>
+  <title>EndoWiki — Clinical knowledge for endodontists</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Community knowledge base for endodontists: clinical articles, plus honest reviews of courses and equipment." />
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,user-scalable=no,viewport-fit=cover" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6fb8'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-weight='800' font-size='18' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/themes/vue.css" />
+  <meta name="description" content="Community knowledge base for endodontists: peer-contributed clinical articles plus honest, structured reviews of courses and equipment." />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%238B2B2B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='20' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/styles.css" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+  <script src="assets/auth.js" defer></script>
 </head>
 <body>
-  <div id="app">Loading EndoWiki…</div>
-  <script>
-    window.$docsify = {
-      name: '<span class="brand-logo">E</span> EndoWiki',
-      // Replace with your GitHub repo after first push (owner/repo)
-      repo: 'seni4it/endo-wiki',
-      homepage: 'home.md',
-      loadSidebar: true,
-      loadNavbar: true,
-      coverpage: true,
-      onlyCover: false,
-      auto2top: true,
-      maxLevel: 3,
-      subMaxLevel: 2,
-      search: {
-        maxAge: 86400000,
-        paths: 'auto',
-        placeholder: 'Search articles & reviews…',
-        noData: 'Nothing found.',
-        depth: 3,
-      },
-      pagination: {
-        previousText: '← Previous',
-        nextText: 'Next →',
-        crossChapter: true,
-        crossChapterText: true,
-      },
-      copyCode: { buttonText: 'Copy', errorText: 'Error', successText: 'Copied' },
-      tabs: { persist: true, sync: true, theme: 'classic', tabComments: true, tabHeadings: true },
-      alias: {
-        '/.*/_sidebar.md': '/_sidebar.md',
-        '/.*/_navbar.md': '/_navbar.md',
-      },
-      plugins: [
-        function (hook, vm) {
-          // Prominent "Edit this page" banner at the TOP of every article,
-          // plus a small "History / Discuss" footer below.
-          hook.beforeEach(function (html) {
-            var path = vm.route.file;
-            if (!path) return html;
-            // Skip banner on special pages
-            var skip = /(^|\/)(_sidebar|_navbar|_coverpage|README)\.md$/i.test(path) ||
-                       /^home\.md$/i.test(path);
-            var repo = vm.config.repo;
-            var repoOk = repo && repo.indexOf('/') !== -1 && repo.indexOf('YOUR-') === -1;
-            var editHref = repoOk
-              ? 'https://github.com/' + repo + '/edit/main/' + path
-              : 'compose.html?edit=' + encodeURIComponent(path);
-            var banner = '';
-            if (!skip) {
-              banner =
-                '<div class="contribute-banner">' +
-                  '<span>See something to fix or add? <strong>You can edit this page.</strong></span>' +
-                  '<a class="cta" href="' + editHref + '"' + (repoOk ? ' target="_blank" rel="noopener"' : '') + '>✏️ Edit this page</a>' +
-                '</div>';
-            }
-            var footer = '';
-            if (repoOk && !skip) {
-              var base = 'https://github.com/' + repo;
-              var historyUrl = base + '/commits/main/' + path;
-              var discussUrl = base + '/issues/new?title=' + encodeURIComponent('Discussion: ' + path) + '&body=' + encodeURIComponent('Discussion for article: ' + path);
-              footer =
-                '\n\n---\n\n' +
-                '<small style="color:var(--muted)">' +
-                '🕑 <a href="' + historyUrl + '" target="_blank" rel="noopener">Change history</a> · ' +
-                '💬 <a href="' + discussUrl + '" target="_blank" rel="noopener">Start a discussion</a>' +
-                '</small>\n';
-            }
-            return banner + html + footer;
-          });
-        },
-      ],
-      // MathJax config
-      latex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
-      // Mermaid
-      markdown: {
-        renderer: {
-          code: function (code, lang) {
-            if (lang === 'mermaid') {
-              return '<div class="mermaid">' + code + '</div>';
-            }
-            return this.origin.code.apply(this, arguments);
-          },
-        },
-      },
-    };
-  </script>
-  <script src="assets/reviews.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-footnote/dist/docsify-footnote.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
-  <script>
-    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] } };
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
-  <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 
-  <!-- Floating "Write a new entry" button, always visible -->
-  <a id="fab-compose" href="compose.html" title="Write a new article or review">
-    <span class="fab-icon">✏️</span>
+  <!-- ─── Navigation ─────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="site-nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        EndoWiki
+      </a>
+      <div class="nav-links" role="list">
+        <a href="#articles" role="listitem">Articles</a>
+        <a href="#courses" role="listitem">Courses</a>
+        <a href="#equipment" role="listitem">Equipment</a>
+        <a href="contributing.html" role="listitem">Contribute</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-cta" href="compose.html">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 2l2 2-9 9H3v-2l9-9z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Write a new entry
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ───────────────────────────────────────────── -->
+  <header class="home-hero" role="banner">
+    <div class="home-hero-inner">
+      <span class="home-hero-kicker">Community knowledge base</span>
+      <h1 class="anim-fade-up">
+        The clinical reference<br><em>endodontists actually trust</em>
+      </h1>
+      <p class="home-hero-tagline anim-fade-up anim-delay-1">
+        Peer-contributed articles on technique, materials, and outcomes.
+        Honest reviews of every course and piece of equipment that matters.
+        Written by specialists, for specialists.
+      </p>
+      <div class="home-hero-actions anim-fade-up anim-delay-2">
+        <a class="btn-hero-primary" href="#articles">Browse articles</a>
+        <a class="btn-hero-ghost" href="#courses">See course reviews</a>
+      </div>
+    </div>
+    <div class="home-stats anim-fade-up anim-delay-3">
+      <div class="stat">
+        <span class="stat-n" id="stat-articles">—</span>
+        <span class="stat-label">Articles</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n" id="stat-courses">—</span>
+        <span class="stat-label">Course reviews</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n" id="stat-equipment">—</span>
+        <span class="stat-label">Equipment reviews</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Main content ────────────────────────────────────── -->
+  <main class="home-main" id="main">
+
+    <!-- Articles -->
+    <section id="articles" aria-labelledby="articles-heading">
+      <div class="section-header">
+        <h2 id="articles-heading">Clinical Articles</h2>
+        <span class="section-kicker">Peer-contributed</span>
+        <a class="section-more" href="compose.html?kind=article">Write one →</a>
+      </div>
+      <div class="article-grid" id="article-grid">
+        <div class="feed-loading" role="status" aria-live="polite">
+          <span>Loading articles…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course reviews -->
+    <section id="courses" aria-labelledby="courses-heading">
+      <div class="section-header">
+        <h2 id="courses-heading">Course Reviews</h2>
+        <span class="section-kicker">CE · Masterclasses · Workshops</span>
+        <a class="section-more" href="compose.html?kind=course">Add a review →</a>
+      </div>
+      <div class="reviews-strip" id="course-grid">
+        <div class="feed-loading" role="status" aria-live="polite">
+          <span>Loading reviews…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Equipment reviews -->
+    <section id="equipment" aria-labelledby="equipment-heading">
+      <div class="section-header">
+        <h2 id="equipment-heading">Equipment Reviews</h2>
+        <span class="section-kicker">Apex locators · Motors · Microscopes · File systems</span>
+        <a class="section-more" href="compose.html?kind=equipment">Add a review →</a>
+      </div>
+      <div class="reviews-strip" id="equipment-grid">
+        <div class="feed-loading" role="status" aria-live="polite">
+          <span>Loading reviews…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contribute CTA -->
+    <div class="home-cta-band" role="complementary">
+      <div>
+        <h3>Share what you know.</h3>
+        <p>
+          EndoWiki is built by the endodontic community. If you've taken a course, used a
+          piece of equipment, or developed a technique worth sharing — write it up.
+          No markdown required: our editor works like any document editor.
+        </p>
+      </div>
+      <a class="btn-cta-band" href="compose.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 2l2 2-9 9H3v-2l9-9z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Write a new entry
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ─── Footer ──────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div>
+        <div class="footer-brand">EndoWiki</div>
+        <p class="footer-mission">
+          A community knowledge base for endodontists. Content is written and reviewed
+          by practising specialists. Articles are released under
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+          Content is for educational purposes only and does not constitute clinical advice.
+        </p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/seni4it/endo-wiki" target="_blank" rel="noopener">GitHub</a>
+        <a href="contributing.html">How to contribute</a>
+        <a href="editorial-guidelines.html">Editorial guidelines</a>
+        <a href="compose.html">Write a new entry</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      &copy; EndoWiki contributors. All content CC BY-SA 4.0.
+    </div>
+  </footer>
+
+  <!-- ─── Floating compose button ─────────────────────────── -->
+  <a id="fab-compose" href="compose.html" title="Write a new article or review" aria-label="Write a new entry">
+    <svg class="fab-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path d="M13.5 2.25l2.25 2.25L6 14.25H3.75V12L13.5 2.25z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
     <span class="fab-label">Write a new entry</span>
   </a>
+
+  <!-- ─── JS: Fetch and render feeds ──────────────────────── -->
+  <script>
+  (function () {
+    /* ── helpers ──────────────────────────────────── */
+    function esc(s) {
+      return String(s || "").replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function stars(n) {
+      var r = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+      return '<span class="rc-stars">' + '★'.repeat(r) + '<span class="empty">' + '☆'.repeat(5 - r) + '</span></span>';
+    }
+    function fmtDate(iso) {
+      if (!iso) return '';
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+    }
+    function initials(name) {
+      return String(name || '?').split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+    }
+    function ratingLabel(n) {
+      return ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'][Math.round(n)] || '';
+    }
+
+    /* ── article card ────────────────────────────── */
+    function articleCard(a) {
+      var href = 'article.html?slug=' + encodeURIComponent(a.slug);
+      return '<a class="article-card anim-fade-up" href="' + href + '">' +
+        '<span class="article-card-category">Clinical article</span>' +
+        '<span class="article-card-title">' + esc(a.title) + '</span>' +
+        (a.summary ? '<span class="article-card-summary">' + esc(a.summary) + '</span>' : '') +
+        '<div class="article-card-meta">' +
+          '<span class="author-dot" aria-hidden="true">' + esc(initials(a.author_name)) + '</span>' +
+          '<span>' + esc(a.author_name || 'Community') + '</span>' +
+          (a.updated_at ? '<span style="margin-left:auto;">' + fmtDate(a.updated_at) + '</span>' : '') +
+        '</div>' +
+      '</a>';
+    }
+
+    /* ── review card (small) ─────────────────────── */
+    function reviewCardSm(r, kind) {
+      var href = 'review.html?slug=' + encodeURIComponent(r.slug);
+      return '<a class="review-card-sm anim-fade-up" href="' + href + '">' +
+        '<span class="kind-badge ' + esc(kind) + '">' + esc(kind) + '</span>' +
+        '<span class="rc-title">' + esc(r.title) + '</span>' +
+        stars(r.rating) +
+        (r.verdict ? '<span class="rc-verdict">' + esc(r.verdict) + '</span>' : '') +
+        '<div class="rc-meta">' +
+          esc(r.author_name || 'Community') +
+          (r.updated_at ? ' · ' + fmtDate(r.updated_at) : '') +
+        '</div>' +
+      '</a>';
+    }
+
+    /* ── fetch & render ──────────────────────────── */
+    function loadFeed(kind, gridId, renderer) {
+      var grid = document.getElementById(gridId);
+      fetch('/api/list?kind=' + kind)
+        .then(function(res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function(items) {
+          if (!items || items.length === 0) {
+            grid.innerHTML = '<div class="feed-empty">No ' + kind + 's published yet. <a href="compose.html?kind=' + kind + '">Be the first to write one →</a></div>';
+            return;
+          }
+          grid.innerHTML = items.map(function(item, i) {
+            var card = renderer(item, kind);
+            // Stagger animation delays
+            return card.replace('anim-fade-up', 'anim-fade-up anim-delay-' + Math.min(i + 1, 4));
+          }).join('');
+          // Update stat counter
+          var statKey = kind === 'article' ? 'stat-articles' : kind === 'course' ? 'stat-courses' : 'stat-equipment';
+          var statEl = document.getElementById(statKey);
+          if (statEl) statEl.textContent = items.length;
+        })
+        .catch(function(err) {
+          grid.innerHTML = '<div class="feed-empty">Could not load ' + kind + 's. <a href="compose.html?kind=' + kind + '">Write one →</a></div>';
+          console.error('Feed error (' + kind + '):', err);
+        });
+    }
+
+    // Load all three feeds in parallel
+    loadFeed('article',   'article-grid',   articleCard);
+    loadFeed('course',    'course-grid',    reviewCardSm);
+    loadFeed('equipment', 'equipment-grid', reviewCardSm);
+
+  })();
+  </script>
+
 </body>
 </html>

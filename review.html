@@ -4,134 +4,239 @@
   <meta charset="UTF-8" />
   <title>Loading… — EndoWiki</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6fb8'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-weight='800' font-size='18' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%238B2B2B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='20' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/styles.css" />
-  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fafcff; color: #1a2330; margin: 0; line-height: 1.6; }
-    .page-nav { background: white; border-bottom: 1px solid #eef2f7; padding: 14px 20px; }
-    .page-nav-inner { max-width: 800px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
-    .page-nav a.brand { color: #0b6fb8; text-decoration: none; font-weight: 800; }
-    .page-nav .spacer { flex: 1; }
-    .page-nav a { color: #5a6b80; text-decoration: none; font-size: 14px; }
-    .page-nav a:hover { color: #0b6fb8; }
-    main { max-width: 760px; margin: 0 auto; padding: 32px 24px 80px; }
-    .review-hero {
-      background: white; border: 1px solid #dde3ec; border-radius: 14px; padding: 28px;
-      box-shadow: 0 1px 3px rgba(15,30,60,0.04);
-    }
-    .review-hero .head { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
-    .review-hero h1 { margin: 0 0 6px; font-size: 28px; line-height: 1.2; }
-    .kind-tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; vertical-align: middle; margin-left: 6px; }
-    .kind-tag.course { background: #eaf4fb; color: #0b6fb8; }
-    .kind-tag.equipment { background: #e8f6ef; color: #2aa876; }
-    .meta { color: #5a6b80; font-size: 14px; margin: 8px 0 0; }
-    .stars { color: #f5a623; font-size: 28px; letter-spacing: 3px; white-space: nowrap; }
-    .stars .empty { color: #e5eaf0; }
-    .facts {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px 24px; margin: 22px 0 6px;
-      padding: 18px 20px; background: #f7f9fc; border-radius: 10px; font-size: 14px;
-    }
-    .facts .k { display: block; color: #5a6b80; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin-bottom: 2px; }
-    .facts .v { color: #1a2330; font-weight: 500; }
-    .proscons { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
-    @media (max-width: 600px) { .proscons { grid-template-columns: 1fr; } }
-    .proscons .pros, .proscons .cons { background: white; border: 1px solid #e5eaf0; border-radius: 10px; padding: 14px 18px; }
-    .proscons h4 { margin: 0 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .proscons .pros h4 { color: #1c6b45; }
-    .proscons .cons h4 { color: #9c2b17; }
-    .proscons ul { margin: 4px 0; padding-left: 20px; }
-    .proscons li { margin: 6px 0; }
-    .verdict { padding: 14px 18px; border-radius: 10px; font-size: 15px; font-weight: 500; margin-top: 20px; }
-    .verdict.yes { background: #e8f6ef; color: #1c6b45; border: 1px solid #c9e8d8; }
-    .verdict.no  { background: #fdeceb; color: #9c2b17; border: 1px solid #f2c4bc; }
-    .verdict.mixed { background: #fdf5e7; color: #8a5a17; border: 1px solid #f0d9a8; }
-    .body-host { margin-top: 32px; font-size: 17px; line-height: 1.7; }
-    .body-host h2, .body-host h3 { margin-top: 1.6em; }
-    .body-host img { max-width: 100%; height: auto; border-radius: 6px; }
-    .author-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: #eaf4fb; color: #0b4d85; border-radius: 20px; font-size: 13px; font-weight: 600; }
-    .loading { text-align: center; padding: 80px 0; color: #5a6b80; }
-  </style>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+  <script src="assets/auth.js" defer></script>
 </head>
 <body>
-  <div class="page-nav">
-    <div class="page-nav-inner">
-      <a class="brand" href="/">EndoWiki</a>
-      <span class="spacer"></span>
-      <a href="/">← Home</a>
-      <a href="compose.html?kind=course">✏️ New review</a>
-    </div>
-  </div>
 
-  <main id="main"><div class="loading">Loading…</div></main>
+  <!-- Nav -->
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="site-nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        EndoWiki
+      </a>
+      <div class="nav-links">
+        <a href="/#articles">Articles</a>
+        <a href="/#courses">Courses</a>
+        <a href="/#equipment">Equipment</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-cta" href="compose.html?kind=course">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 2l2 2-9 9H3v-2l9-9z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          New review
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="review-page">
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <span>Loading review…</span>
+      </div>
+    </div>
+  </main>
 
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
+  <!-- Citation widget -->
+  <script src="assets/cite.js"></script>
+
   <script>
-    function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);}
-    function fmtDate(iso){if(!iso)return"";const d=new Date(iso);return d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}
-    function stars(n){const r=Math.max(0,Math.min(5,Math.round(Number(n)||0)));return '<span class="stars">'+"★".repeat(r)+'<span class="empty">'+"☆".repeat(5-r)+'</span></span>';}
-    function verdictBlock(r){
-      const rec = r.would_recommend;
-      let cls="mixed", text=r.verdict || "See pros and cons.";
-      if (rec==="yes" || rec===true) { cls="yes"; if(!r.verdict) text="Would recommend."; }
-      else if (rec==="no" || rec===false) { cls="no"; if(!r.verdict) text="Would not recommend."; }
-      return `<div class="verdict ${cls}">${esc(text)}</div>`;
+  (function () {
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function fmtDate(iso) {
+      if (!iso) return '';
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    function initials(name) {
+      return String(name || '?').split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+    }
+    function starsHTML(n) {
+      var r = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+      return '<span class="review-stars" aria-label="' + r + ' out of 5 stars">' +
+        '★'.repeat(r) + '<span class="empty">' + '☆'.repeat(5 - r) + '</span>' +
+      '</span>';
+    }
+    function ratingLabel(n) {
+      return ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'][Math.round(n)] || '';
     }
 
-    (async function () {
-      const u = new URL(location.href);
-      const slug = u.searchParams.get("slug") || u.pathname.replace(/^\/r\//, "");
-      if (!slug) { document.getElementById("main").innerHTML="<p>Missing review.</p>"; return; }
-      // We don't know if it's course or equipment — try both
-      let r = null, kind = null;
-      for (const k of ["course","equipment"]) {
-        const res = await fetch("/api/get?kind="+k+"&slug="+encodeURIComponent(slug));
-        if (res.ok) { r = await res.json(); kind = k; break; }
-      }
-      if (!r) { document.getElementById("main").innerHTML="<h1>Not found</h1><p>This review doesn't exist yet.</p>"; return; }
-      document.title = r.title + " — EndoWiki";
+    var u = new URL(location.href);
+    var slug = u.searchParams.get('slug') || u.pathname.replace(/^\/r\//, '');
+    var mainEl = document.getElementById('main');
 
-      const factKeys = kind === "course"
-        ? [["Provider", r.provider], ["Instructor", r.instructor], ["Location", r.location], ["Format", r.format], ["Duration", r.duration], ["Price", r.price]]
-        : [["Brand", r.brand], ["Model", r.model], ["Category", r.category], ["Price", r.price], ["Used for", r.duration_used]];
-      const facts = factKeys
-        .filter(([,v]) => v && String(v).trim() !== "")
-        .map(([k,v]) => `<div><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`)
-        .join("");
+    if (!slug) {
+      mainEl.innerHTML = '<div class="review-page"><p>Missing review. <a href="/">← Home</a></p></div>';
+      return;
+    }
 
-      const pros = (r.pros||[]).map(p=>`<li>${esc(p)}</li>`).join("");
-      const cons = (r.cons||[]).map(c=>`<li>${esc(c)}</li>`).join("");
+    // Try course then equipment
+    var foundKind = null;
+    var foundData = null;
 
-      const main = document.getElementById("main");
-      main.innerHTML = `
-        <div class="review-hero">
-          <div class="head">
-            <div>
-              <h1>${esc(r.title)}<span class="kind-tag ${kind}">${kind}</span></h1>
-              <div class="meta"><span class="author-chip">✍️ ${esc(r.author_name)}</span> · Updated ${fmtDate(r.updated_at)}</div>
-            </div>
-            <div>${stars(r.rating)}</div>
-          </div>
-          ${facts ? `<div class="facts">${facts}</div>` : ""}
-          ${(pros || cons) ? `
-            <div class="proscons">
-              <div class="pros"><h4>What's good</h4><ul>${pros || "<li>—</li>"}</ul></div>
-              <div class="cons"><h4>What's not</h4><ul>${cons || "<li>—</li>"}</ul></div>
-            </div>` : ""}
-          ${verdictBlock(r)}
-        </div>
-        <div class="body-host" id="body"></div>
-      `;
-      if (r.body) {
-        const viewer = toastui.Editor.factory({
-          el: document.createElement("div"),
-          viewer: true,
-          initialValue: r.body,
-        });
-        document.getElementById("body").innerHTML = viewer.getHTML();
-      }
-    })();
+    fetch('/api/get?kind=course&slug=' + encodeURIComponent(slug))
+      .then(function(res) {
+        if (res.ok) { foundKind = 'course'; return res.json(); }
+        return fetch('/api/get?kind=equipment&slug=' + encodeURIComponent(slug))
+          .then(function(res2) {
+            if (res2.ok) { foundKind = 'equipment'; return res2.json(); }
+            throw { notFound: true };
+          });
+      })
+      .then(function(r) {
+        var kind = foundKind;
+        document.title = r.title + ' — EndoWiki';
+
+        // Build facts
+        var factDefs = kind === 'course'
+          ? [['Provider', r.provider], ['Instructor', r.instructor], ['Location', r.location],
+             ['Format', r.format], ['Duration', r.duration], ['Price', r.price]]
+          : [['Brand', r.brand], ['Model', r.model], ['Category', r.category],
+             ['Price', r.price], ['Used for', r.duration_used]];
+
+        var factsHTML = factDefs
+          .filter(function(pair) { return pair[1] && String(pair[1]).trim(); })
+          .map(function(pair) {
+            return '<div><span class="fact-k">' + esc(pair[0]) + '</span>' +
+                   '<span class="fact-v">' + esc(pair[1]) + '</span></div>';
+          }).join('');
+
+        // Build pros/cons
+        var pros = (r.pros || []).map(function(p) { return '<li>' + esc(p) + '</li>'; }).join('');
+        var cons = (r.cons || []).map(function(c) { return '<li>' + esc(c) + '</li>'; }).join('');
+
+        // Verdict
+        var rec = r.would_recommend;
+        var verdictCls = 'mixed', verdictLabel = 'Verdict';
+        if (rec === 'yes' || rec === true)  { verdictCls = 'yes';  verdictLabel = 'Recommended'; }
+        if (rec === 'no'  || rec === false) { verdictCls = 'no';   verdictLabel = 'Not recommended'; }
+        var verdictText = r.verdict || (verdictCls === 'yes' ? 'Would recommend.' : verdictCls === 'no' ? 'Would not recommend.' : 'Mixed — see pros and cons.');
+
+        // Kind badge label
+        var kindLabel = kind === 'course' ? 'Course review' : 'Equipment review';
+        var sectionHref = kind === 'course' ? '/#courses' : '/#equipment';
+
+        mainEl.innerHTML =
+          '<div class="review-page">' +
+
+            // Breadcrumb
+            '<nav class="breadcrumb" aria-label="Breadcrumb">' +
+              '<a href="/">EndoWiki</a>' +
+              '<span class="sep" aria-hidden="true">›</span>' +
+              '<a href="' + sectionHref + '">' + (kind === 'course' ? 'Courses' : 'Equipment') + '</a>' +
+              '<span class="sep" aria-hidden="true">›</span>' +
+              '<span aria-current="page">' + esc(r.title) + '</span>' +
+            '</nav>' +
+
+            // Hero card
+            '<div class="review-hero-card anim-fade-up">' +
+              '<div class="review-hero-head">' +
+                '<div style="min-width:0;">' +
+                  '<span class="kind-badge ' + kind + '" style="display:inline-block;margin-bottom:10px;font-family:var(--font-ui);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;">' +
+                    esc(kindLabel) +
+                  '</span>' +
+                  '<h1 class="review-hero-title">' + esc(r.title) + '</h1>' +
+                  '<div class="review-hero-byline">' +
+                    '<span class="review-author-chip">' +
+                      '<span style="width:20px;height:20px;border-radius:50%;background:var(--ink);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">' +
+                        esc(initials(r.author_name)) +
+                      '</span>' +
+                      esc(r.author_name || 'EndoWiki contributor') +
+                    '</span>' +
+                    (r.updated_at ? '<span>Updated ' + fmtDate(r.updated_at) + '</span>' : '') +
+                  '</div>' +
+                '</div>' +
+                '<div class="review-stars-block">' +
+                  starsHTML(r.rating) +
+                  '<span class="review-rating-label">' + esc(ratingLabel(r.rating)) + '</span>' +
+                '</div>' +
+              '</div>' +
+
+              // Facts
+              (factsHTML ? '<div class="review-facts">' + factsHTML + '</div>' : '') +
+
+              // Pros/cons
+              ((pros || cons) ?
+                '<div class="review-proscons">' +
+                  '<div class="proscons-col pros">' +
+                    '<h4>What works well</h4>' +
+                    '<ul>' + (pros || '<li>—</li>') + '</ul>' +
+                  '</div>' +
+                  '<div class="proscons-col cons">' +
+                    '<h4>What falls short</h4>' +
+                    '<ul>' + (cons || '<li>—</li>') + '</ul>' +
+                  '</div>' +
+                '</div>'
+              : '') +
+
+              // Verdict
+              '<div class="review-verdict ' + verdictCls + '" data-label="' + esc(verdictLabel) + '">' +
+                esc(verdictText) +
+              '</div>' +
+
+            '</div>' + // /review-hero-card
+
+            // Body
+            (r.body ?
+              '<div class="review-body anim-fade-up anim-delay-2">' +
+                '<span class="review-body-label">Full review</span>' +
+                '<div class="article-body" id="review-body-content"></div>' +
+              '</div>'
+            : '') +
+
+            // Citation slot
+            '<div id="cite-slot" class="anim-fade-up anim-delay-2"></div>' +
+
+            // Footer
+            '<footer style="margin-top:3em;padding-top:1.5em;border-top:1px solid var(--divider);font-family:var(--font-ui);font-size:13px;color:var(--ink-faint);">' +
+              '<p>Have a different experience? <a href="compose.html?kind=' + kind + '" style="color:var(--oxblood);font-weight:600;">Write your own review →</a></p>' +
+            '</footer>' +
+
+          '</div>';
+
+        // Render body markdown
+        if (r.body) {
+          var viewer = toastui.Editor.factory({
+            el: document.createElement('div'),
+            viewer: true,
+            initialValue: r.body,
+          });
+          var bodyEl = document.getElementById('review-body-content');
+          if (bodyEl) bodyEl.innerHTML = viewer.getHTML();
+        }
+
+        // Render citation widget
+        if (typeof renderCitation === 'function') {
+          r.kind = kind;
+          renderCitation(document.getElementById('cite-slot'), r, location.href);
+        }
+      })
+      .catch(function(err) {
+        var notFound = err && err.notFound;
+        document.title = (notFound ? 'Not found' : 'Error') + ' — EndoWiki';
+        mainEl.innerHTML =
+          '<div class="review-page">' +
+            '<nav class="breadcrumb"><a href="/">EndoWiki</a> <span class="sep">›</span> Reviews</nav>' +
+            '<h1 class="review-hero-title" style="margin-top:var(--s6);">' +
+              (notFound ? 'Review not found' : 'Something went wrong') +
+            '</h1>' +
+            '<p style="font-family:var(--font-body);font-size:17px;color:var(--ink-muted);">' +
+              (notFound ? "This review doesn't exist yet." : esc(err.message)) +
+            '</p>' +
+            '<p><a href="/" style="color:var(--oxblood);">← Back to home</a></p>' +
+          '</div>';
+      });
+  })();
   </script>
+
 </body>
 </html>

@@ -4,88 +4,151 @@
   <meta charset="UTF-8" />
   <title>Loading… — EndoWiki</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6fb8'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-weight='800' font-size='18' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%238B2B2B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='20' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/styles.css" />
-  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-  <style>
-    body { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; background: #fafcff; color: #1a2330; margin: 0; line-height: 1.65; }
-    .page-nav { background: white; border-bottom: 1px solid #eef2f7; padding: 14px 20px; }
-    .page-nav-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
-    .page-nav a.brand { color: #0b6fb8; text-decoration: none; font-weight: 800; font-family: -apple-system, sans-serif; }
-    .page-nav .spacer { flex: 1; }
-    .page-nav a { color: #5a6b80; text-decoration: none; font-family: -apple-system, sans-serif; font-size: 14px; }
-    .page-nav a:hover { color: #0b6fb8; }
-    main { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
-    .article-meta { color: #5a6b80; font-size: 14px; margin-bottom: 24px; font-family: -apple-system, sans-serif; }
-    .article-title { font-size: 40px; font-weight: 700; line-height: 1.15; margin: 0 0 8px; font-family: "Iowan Old Style", Georgia, serif; letter-spacing: -0.01em; }
-    .article-summary { font-size: 20px; color: #3a4658; margin: 0 0 28px; font-style: italic; }
-    .article-body { font-size: 18px; }
-    .article-body h1, .article-body h2, .article-body h3 { font-family: "Iowan Old Style", Georgia, serif; margin-top: 1.6em; margin-bottom: 0.4em; letter-spacing: -0.01em; }
-    .article-body h2 { font-size: 26px; border-bottom: 1px solid #eef2f7; padding-bottom: 6px; }
-    .article-body h3 { font-size: 20px; }
-    .article-body p { margin: 1em 0; }
-    .article-body a { color: #0b6fb8; }
-    .article-body blockquote { border-left: 3px solid #0b6fb8; margin: 1.2em 0; padding: 0.4em 1.2em; color: #3a4658; background: #f5f9fd; font-style: italic; }
-    .article-body code { background: #eef2f7; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: ui-monospace, Menlo, monospace; }
-    .article-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 1em 0; }
-    .article-body ul, .article-body ol { padding-left: 1.4em; }
-    .author-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: #eaf4fb; color: #0b4d85; border-radius: 20px; font-size: 14px; font-weight: 600; font-family: -apple-system, sans-serif; }
-    .loading { text-align: center; padding: 80px 0; color: #5a6b80; font-family: -apple-system, sans-serif; }
-  </style>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+  <script src="assets/auth.js" defer></script>
 </head>
 <body>
-  <div class="page-nav">
-    <div class="page-nav-inner">
-      <a class="brand" href="/">EndoWiki</a>
-      <span class="spacer"></span>
-      <a href="/">← Home</a>
-      <a href="compose.html?kind=article">✏️ New article</a>
+
+  <!-- Nav -->
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="site-nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        EndoWiki
+      </a>
+      <div class="nav-links">
+        <a href="/#articles">Articles</a>
+        <a href="/#courses">Courses</a>
+        <a href="/#equipment">Equipment</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-cta" href="compose.html?kind=article">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 2l2 2-9 9H3v-2l9-9z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          New article
+        </a>
+      </div>
     </div>
-  </div>
+  </nav>
 
   <main id="main">
-    <div class="loading">Loading…</div>
+    <div class="article-page">
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <span>Loading article…</span>
+      </div>
+    </div>
   </main>
 
+  <!-- Toast UI viewer -->
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
+  <!-- Citation widget -->
+  <script src="assets/cite.js"></script>
+
   <script>
-    (async function () {
-      const slug = new URLSearchParams(location.search).get("slug") || location.pathname.replace(/^\/a\//, "");
-      if (!slug) {
-        document.getElementById("main").innerHTML = "<p>Missing article.</p>";
-        return;
-      }
-      try {
-        const res = await fetch("/api/get?kind=article&slug=" + encodeURIComponent(slug));
-        if (!res.ok) {
-          document.getElementById("main").innerHTML = "<h1>Not found</h1><p>This article doesn't exist yet.</p>";
-          document.title = "Not found — EndoWiki";
-          return;
+  (function () {
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function fmtDate(iso) {
+      if (!iso) return '';
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    function initials(name) {
+      return String(name || '?').split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+    }
+
+    var slug = new URLSearchParams(location.search).get('slug') ||
+               location.pathname.replace(/^\/a\//, '');
+
+    var mainEl = document.getElementById('main');
+
+    if (!slug) {
+      mainEl.innerHTML = '<div class="article-page"><h1>Missing article</h1><p><a href="/">← Back to home</a></p></div>';
+      return;
+    }
+
+    fetch('/api/get?kind=article&slug=' + encodeURIComponent(slug))
+      .then(function(res) {
+        if (res.status === 404) throw { notFound: true };
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(a) {
+        document.title = a.title + ' — EndoWiki';
+
+        mainEl.innerHTML =
+          '<div class="article-page">' +
+            // Breadcrumb
+            '<nav class="breadcrumb" aria-label="Breadcrumb">' +
+              '<a href="/">EndoWiki</a>' +
+              '<span class="sep" aria-hidden="true">›</span>' +
+              '<a href="/#articles">Articles</a>' +
+              '<span class="sep" aria-hidden="true">›</span>' +
+              '<span aria-current="page">' + esc(a.title) + '</span>' +
+            '</nav>' +
+
+            // Header
+            '<header class="article-header">' +
+              '<span class="article-category-tag">Clinical Article</span>' +
+              '<h1 class="article-title anim-fade-up">' + esc(a.title) + '</h1>' +
+              (a.summary ? '<p class="article-summary anim-fade-up anim-delay-1">' + esc(a.summary) + '</p>' : '') +
+              '<div class="article-byline anim-fade-up anim-delay-2">' +
+                '<div class="byline-avatar" aria-hidden="true">' + esc(initials(a.author_name)) + '</div>' +
+                '<div class="byline-info">' +
+                  '<span class="byline-name">' + esc(a.author_name || 'EndoWiki contributor') + '</span>' +
+                  (a.updated_at ? '<span class="byline-date">Updated ' + fmtDate(a.updated_at) + '</span>' : '') +
+                '</div>' +
+              '</div>' +
+            '</header>' +
+
+            // Body placeholder
+            '<div class="article-body anim-fade-up anim-delay-3" id="article-body"></div>' +
+
+            // Citation slot
+            '<div id="cite-slot" class="anim-fade-up anim-delay-3"></div>' +
+
+            // Footer
+            '<footer style="margin-top:3em;padding-top:1.5em;border-top:1px solid var(--divider);font-family:var(--font-ui);font-size:13px;color:var(--ink-faint);">' +
+              '<p>Found something to improve? <a href="compose.html?kind=article" style="color:var(--oxblood);font-weight:600;">Submit a correction or addition →</a></p>' +
+            '</footer>' +
+          '</div>';
+
+        // Render the markdown body via Toast UI viewer
+        if (a.body) {
+          var viewer = toastui.Editor.factory({
+            el: document.createElement('div'),
+            viewer: true,
+            initialValue: a.body,
+          });
+          document.getElementById('article-body').innerHTML = viewer.getHTML();
         }
-        const a = await res.json();
-        document.title = a.title + " — EndoWiki";
-        const main = document.getElementById("main");
-        main.innerHTML = `
-          <div class="article-meta">
-            <span class="author-chip">✍️ ${esc(a.author_name)}</span>
-            <span style="margin-left:10px;">Updated ${fmtDate(a.updated_at)}</span>
-          </div>
-          <h1 class="article-title">${esc(a.title)}</h1>
-          ${a.summary ? `<p class="article-summary">${esc(a.summary)}</p>` : ""}
-          <div class="article-body" id="body"></div>
-        `;
-        const viewer = toastui.Editor.factory({
-          el: document.createElement("div"),
-          viewer: true,
-          initialValue: a.body,
-        });
-        document.getElementById("body").innerHTML = viewer.getHTML();
-      } catch (e) {
-        document.getElementById("main").innerHTML = "<h1>Error</h1><p>" + esc(e.message) + "</p>";
-      }
-    })();
-    function esc(s) { return String(s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
-    function fmtDate(iso) { if(!iso) return ""; const d=new Date(iso); return d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"}); }
+
+        // Render citation widget
+        if (typeof renderCitation === 'function') {
+          a.kind = 'article';
+          renderCitation(document.getElementById('cite-slot'), a, location.href);
+        }
+      })
+      .catch(function(err) {
+        var notFound = err && err.notFound;
+        document.title = (notFound ? 'Not found' : 'Error') + ' — EndoWiki';
+        mainEl.innerHTML =
+          '<div class="article-page">' +
+            '<nav class="breadcrumb"><a href="/">EndoWiki</a> <span class="sep">›</span> Articles</nav>' +
+            '<h1 class="article-title">' + (notFound ? 'Article not found' : 'Something went wrong') + '</h1>' +
+            '<p style="font-family:var(--font-body);font-size:17px;color:var(--ink-muted);">' +
+              (notFound ? 'This article doesn\'t exist yet.' : esc(err.message)) +
+            '</p>' +
+            '<p><a href="/" style="color:var(--oxblood);">← Back to home</a></p>' +
+          '</div>';
+      });
+  })();
   </script>
+
 </body>
 </html>
