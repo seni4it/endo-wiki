@@ -134,3 +134,44 @@ section.cover.show { background: linear-gradient(135deg, #eaf2fb 0%, #e7f6ed 100
 .home-cards .hc:hover { border-color: #0b6fb8; }
 .home-cards .hc h3 { margin: 0 0 6px; font-size: 17px; border: none; padding: 0; color: #0b6fb8; }
 .home-cards .hc p { margin: 0; color: #5a6b80; font-size: 14px; }
+
+/* Home hero "Edit this page" CTA */
+.home-hero .hero-actions a.primary-cta {
+  background: #ffd966; color: #5a3d00; font-weight: 700; border: 1px solid #ffd966;
+}
+.home-hero .hero-actions a.primary-cta:hover { background: #ffc83a; }
+
+/* Floating compose button — on every page */
+#fab-compose {
+  position: fixed; right: 22px; bottom: 22px; z-index: 50;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: 999px;
+  background: linear-gradient(135deg, #0b6fb8, #2aa876);
+  color: white; text-decoration: none; font-weight: 700; font-size: 15px;
+  box-shadow: 0 8px 24px rgba(11,111,184,0.35), 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#fab-compose:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(11,111,184,0.45), 0 4px 8px rgba(0,0,0,0.1);
+  text-decoration: none;
+}
+#fab-compose .fab-icon { font-size: 20px; line-height: 1; }
+@media (max-width: 640px) {
+  #fab-compose { padding: 12px 16px; }
+  #fab-compose .fab-label { display: none; }
+  #fab-compose .fab-icon { font-size: 22px; }
+}
+
+/* "How to contribute" inline banner on every article page */
+.contribute-banner {
+  background: #f5f9fd; border: 1px solid #cde4f3; border-left: 4px solid #0b6fb8;
+  border-radius: 6px; padding: 12px 16px; margin: 24px 0 16px; font-size: 14px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.contribute-banner strong { color: #0b4d85; }
+.contribute-banner a.cta {
+  display: inline-block; padding: 8px 14px; border-radius: 6px;
+  background: #0b6fb8; color: white; text-decoration: none; font-weight: 600; margin-left: auto;
+}
+.contribute-banner a.cta:hover { background: #095a97; }

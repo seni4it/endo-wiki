@@ -46,24 +46,40 @@
       },
       plugins: [
         function (hook, vm) {
-          // "Edit this page" + "Open discussion on GitHub" footer on every page
+          // Prominent "Edit this page" banner at the TOP of every article,
+          // plus a small "History / Discuss" footer below.
           hook.beforeEach(function (html) {
-            var repo = vm.config.repo;
-            if (!repo || repo.indexOf('YOUR-GITHUB-USERNAME') !== -1) return html;
             var path = vm.route.file;
             if (!path) return html;
-            var base = 'https://github.com/' + repo;
-            var editUrl = base + '/edit/main/' + path;
-            var historyUrl = base + '/commits/main/' + path;
-            var discussUrl = base + '/issues/new?title=' + encodeURIComponent('Discussion: ' + path) + '&body=' + encodeURIComponent('Discussion for article: ' + path);
-            var footer =
-              '\n\n---\n\n' +
-              '<small>' +
-              '✏️ <a href="' + editUrl + '" target="_blank" rel="noopener">Edit this page on GitHub</a> · ' +
-              '🕑 <a href="' + historyUrl + '" target="_blank" rel="noopener">History</a> · ' +
-              '💬 <a href="' + discussUrl + '" target="_blank" rel="noopener">Discuss</a>' +
-              '</small>\n';
-            return html + footer;
+            // Skip banner on special pages
+            var skip = /(^|\/)(_sidebar|_navbar|_coverpage|README)\.md$/i.test(path) ||
+                       /^home\.md$/i.test(path);
+            var repo = vm.config.repo;
+            var repoOk = repo && repo.indexOf('YOUR-GITHUB-USERNAME') === -1;
+            var editHref = repoOk
+              ? 'https://github.com/' + repo + '/edit/main/' + path
+              : 'compose.html?edit=' + encodeURIComponent(path);
+            var banner = '';
+            if (!skip) {
+              banner =
+                '<div class="contribute-banner">' +
+                  '<span>See something to fix or add? <strong>You can edit this page.</strong></span>' +
+                  '<a class="cta" href="' + editHref + '"' + (repoOk ? ' target="_blank" rel="noopener"' : '') + '>✏️ Edit this page</a>' +
+                '</div>';
+            }
+            var footer = '';
+            if (repoOk && !skip) {
+              var base = 'https://github.com/' + repo;
+              var historyUrl = base + '/commits/main/' + path;
+              var discussUrl = base + '/issues/new?title=' + encodeURIComponent('Discussion: ' + path) + '&body=' + encodeURIComponent('Discussion for article: ' + path);
+              footer =
+                '\n\n---\n\n' +
+                '<small style="color:var(--muted)">' +
+                '🕑 <a href="' + historyUrl + '" target="_blank" rel="noopener">Change history</a> · ' +
+                '💬 <a href="' + discussUrl + '" target="_blank" rel="noopener">Start a discussion</a>' +
+                '</small>\n';
+            }
+            return banner + html + footer;
           });
         },
       ],
@@ -82,6 +98,7 @@
       },
     };
   </script>
+  <script src="assets/reviews.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
@@ -98,6 +115,11 @@
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
   <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
-  <script src="assets/reviews.js"></script>
+
+  <!-- Floating "Write a new entry" button, always visible -->
+  <a id="fab-compose" href="compose.html" title="Write a new article or review">
+    <span class="fab-icon">✏️</span>
+    <span class="fab-label">Write a new entry</span>
+  </a>
 </body>
 </html>

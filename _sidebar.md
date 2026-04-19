@@ -20,6 +20,9 @@
   - [X-Smart IQ endomotor](reviews/equipment/x-smart-iq.md)
   - [Zeiss Extaro 300 microscope](reviews/equipment/zeiss-extaro-300.md)
 
-- **Meta**
-  - [Write a review](write-review.md)
+- **Contribute**
+  - [✏️ Write a course review](compose.html?kind=course ':ignore')
+  - [✏️ Write an equipment review](compose.html?kind=equipment ':ignore')
+  - [✏️ Write a clinical article](compose.html?kind=article ':ignore')
+  - [How to contribute](contributing.md)
   - [Editorial guidelines](editorial-guidelines.md)

@@ -1,5 +1,7 @@
 - [Articles](articles/)
 - [Courses](reviews/courses/)
 - [Equipment](reviews/equipment/)
-- [Contribute](contributing.md)
-- [Edit in browser](/admin/)
+- ✏️ Write
+  - [Course review](compose.html?kind=course ':ignore')
+  - [Equipment review](compose.html?kind=equipment ':ignore')
+  - [Clinical article](compose.html?kind=article ':ignore')

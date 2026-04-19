@@ -1,142 +1,38 @@
-# How to write a review
+# Write a review
 
-The **easiest way** is the visual editor: click [**Edit in browser**](/admin/), sign in with GitHub, pick *Course reviews* or *Equipment reviews*, click *New*, fill the form. You can stop reading here.
+Click the button below to open the review composer. Fill in the form — star rating, pros, cons, price, your experience — and hit **Publish**. That's it.
 
-This page is for people writing reviews directly in markdown.
+<p style="margin: 28px 0;">
+  <a href="compose.html?kind=course" style="display:inline-block;background:#0b6fb8;color:white;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:700;margin-right:10px;">🎓 Write a course review</a>
+  <a href="compose.html?kind=equipment" style="display:inline-block;background:#2aa876;color:white;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:700;">🔧 Write an equipment review</a>
+</p>
 
-## Structure of a review file
+## What makes a review useful
 
-Every review has two parts: a JSON block with the structured data (rating, brand, price, pros, cons…) and a markdown body with the narrative. The review card at the top is rendered automatically from the JSON.
+The reviews that actually help readers say:
 
-### Course review template
+- **What you were using before** (so they understand the comparison)
+- **What the product or course does that its marketing doesn't mention**
+- **What it doesn't do well** — even a 5-star review benefits from listing minor cons
+- **Who it's a good fit for and who shouldn't bother**
+- **Price relative to the alternatives**, not just the absolute price
 
-```markdown
-# [Course name]
-
-<script type="application/json" id="review-data">
-{
-  "kind": "course",
-  "title": "Course name as you'd title it",
-  "rating": 5,
-  "author": "Dr. Your Name",
-  "date": "2026-03",
-  "provider": "Who ran it (institution or company)",
-  "instructor": "Main instructor(s)",
-  "location": "City, Country, or Online",
-  "format": "In-person / online-live / online-self-paced / hybrid",
-  "duration": "e.g. 3 days, 40 hours, 6 months",
-  "price": "~€2,500 (CE credits included)",
-  "date_taken": "2026-01",
-  "pros": [
-    "Specific, concrete pro",
-    "Another specific pro"
-  ],
-  "cons": [
-    "Specific con",
-    "Another specific con"
-  ],
-  "would_recommend": true,
-  "verdict": "One-sentence take."
-}
-</script>
-
-<div id="review-card"></div>
-
-## Who this is for
-
-*(who will get the most out of this course — experience level, case types)*
-
-## What it covered
-
-*(bullet or narrative summary of the curriculum)*
-
-## What worked
-
-*(what the course did well — be specific)*
-
-## What didn't
-
-*(honest criticism, with specifics)*
-
-## Verdict
-
-*(would you recommend it? to whom? would you do it again?)*
-```
-
-### Equipment review template
-
-```markdown
-# [Brand Model]
-
-<script type="application/json" id="review-data">
-{
-  "kind": "equipment",
-  "title": "Brand Model",
-  "rating": 4,
-  "author": "Dr. Your Name",
-  "date": "2026-03",
-  "brand": "Brand",
-  "model": "Model number / version",
-  "category": "Apex locator / Endomotor / Microscope / File system / …",
-  "price": "~$450 (USD)",
-  "date_bought": "2025-10",
-  "duration_used": "6 months of daily use",
-  "pros": [
-    "Specific pro with a concrete detail",
-    "Another specific pro"
-  ],
-  "cons": [
-    "Specific con",
-    "Another specific con"
-  ],
-  "would_recommend": true,
-  "verdict": "One-sentence take."
-}
-</script>
-
-<div id="review-card"></div>
-
-## What I was using before
-
-*(important context for the comparison)*
-
-## In use
-
-*(how it actually performs day-to-day)*
-
-## Reliability
-
-*(any failures, warranty experience, build quality notes)*
-
-## Value
-
-*(price relative to alternatives, not just the absolute price)*
-
-## Verdict
-
-*(would you buy it again? who should, who shouldn't)*
-```
-
-## Rating scale (same for both kinds)
+## Rating scale
 
 | Stars | Meaning |
 | --- | --- |
-| ★★★★★ | Would enthusiastically recommend. Essentially no significant complaints. |
-| ★★★★☆ | Recommend with minor caveats. |
-| ★★★☆☆ | Mixed — some will love it, some won't. Depends on use case. |
-| ★★☆☆☆ | Would not recommend for most situations. |
-| ★☆☆☆☆ | Actively regret. Avoid. |
+| ⭐⭐⭐⭐⭐ | Would enthusiastically recommend. Essentially no significant complaints. |
+| ⭐⭐⭐⭐☆ | Recommend with minor caveats. |
+| ⭐⭐⭐☆☆ | Mixed — some will love it, some won't. Depends on use case. |
+| ⭐⭐☆☆☆ | Would not recommend for most situations. |
+| ⭐☆☆☆☆ | Actively regret. Avoid. |
 
 Use the middle of the scale when it applies — 5-star inflation erodes trust in the whole site.
 
 ## Disclosure
 
-If you have a conflict of interest — the manufacturer gave you the product, you're a paid speaker for them, you teach for the course — **say so at the top of the "What I was using before" section** (or equivalent). Something like:
-
-> *Disclosure: Brand Inc. provided a review unit at no charge. They had no editorial input.*
-
-Readers can weigh your take accordingly; they just need to know.
+If the manufacturer gave you the product, if you're a paid speaker for them, if you teach for the course — say so in the first line of your review. Readers can weigh your take accordingly; they just need to know.
 
 ---
 
-See also: [editorial guidelines](editorial-guidelines.md).
+Questions? See the [editorial guidelines](editorial-guidelines.md).

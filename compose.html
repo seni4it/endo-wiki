@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compose a new entry — EndoWiki</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6fb8'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-weight='800' font-size='18' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <style>
+    :root { --primary: #0b6fb8; --accent: #2aa876; --warn: #c75a30; --star: #f5a623; --border: #dde3ec; --muted: #5a6b80; --bg: #f7f9fc; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: #1a2330; }
+    .topbar {
+      background: linear-gradient(135deg, #0b6fb8 0%, #2aa876 100%);
+      color: white; padding: 14px 20px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .topbar a { color: white; text-decoration: none; opacity: 0.95; font-weight: 600; }
+    .topbar a:hover { opacity: 1; }
+    .brand-logo {
+      display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 6px;
+      background: rgba(255,255,255,0.25); color: white; text-align: center; font-weight: 800; font-size: 14px;
+      margin-right: 6px; vertical-align: -3px;
+    }
+    .container { max-width: 920px; margin: 0 auto; padding: 28px 20px 80px; }
+    h1 { margin-top: 0; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15,30,60,0.05); }
+    .card h2 { margin-top: 0; font-size: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .card .step-num { display: inline-block; width: 26px; height: 26px; line-height: 26px; border-radius: 50%; background: var(--primary); color: white; text-align: center; font-weight: 800; margin-right: 10px; font-size: 14px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+    .hint { color: var(--muted); font-size: 13px; margin-top: 4px; font-weight: normal; }
+    input[type=text], input[type=email], input[type=number], select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 15px; font-family: inherit; background: white;
+    }
+    textarea { min-height: 90px; resize: vertical; font-family: -apple-system, Segoe UI, sans-serif; }
+    .row { margin-bottom: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .kind-picker { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .kind-picker { grid-template-columns: 1fr; } }
+    .kind-picker label { position: relative; cursor: pointer; }
+    .kind-picker input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+    .kp-label { display: block; padding: 18px 14px; border-radius: 8px; border: 2px solid var(--border); background: white; transition: all 0.15s; text-align: center; }
+    .kind-picker input:checked + .kp-label { border-color: var(--primary); background: #eaf4fb; box-shadow: 0 0 0 3px rgba(11,111,184,0.15); }
+    .kind-picker input:hover + .kp-label, .kp-label:hover { border-color: var(--primary); }
+    .kp-emoji { font-size: 32px; margin-bottom: 6px; display: block; }
+    .kp-title { font-weight: 700; font-size: 15px; }
+    .kp-desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .stars-input { display: inline-flex; gap: 4px; align-items: center; }
+    .stars-input button {
+      background: none; border: none; cursor: pointer; font-size: 36px; color: #d9dee6; padding: 0 2px; line-height: 1;
+      transition: color 0.1s, transform 0.1s;
+    }
+    .stars-input button:hover { transform: scale(1.1); }
+    .stars-input button.filled { color: var(--star); }
+    .stars-input .value-text { margin-left: 12px; color: var(--muted); font-size: 14px; }
+
+    .list-input { display: flex; flex-direction: column; gap: 6px; }
+    .list-input .li-row { display: flex; gap: 6px; }
+    .list-input input { flex: 1; }
+    .list-input button.rm { background: #fdeceb; color: #9c2b17; border: 1px solid #f2c4bc; border-radius: 6px; width: 36px; cursor: pointer; font-size: 18px; }
+    .list-input button.rm:hover { background: #fbd4cd; }
+    .list-input button.add { background: transparent; color: var(--primary); border: 1px dashed #c0d9ef; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin-top: 4px; }
+    .list-input button.add:hover { background: #f5f9fd; }
+
+    .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+    .btn {
+      display: inline-block; padding: 12px 22px; border-radius: 8px;
+      background: var(--primary); color: white; border: 1px solid var(--primary);
+      font-weight: 700; font-size: 15px; cursor: pointer; text-decoration: none;
+    }
+    .btn:hover { background: #095a97; }
+    .btn.secondary { background: white; color: var(--primary); }
+    .btn.secondary:hover { background: #f2f6fb; }
+    .btn.ghost { background: transparent; color: var(--muted); border-color: var(--border); }
+    .btn.big { padding: 14px 28px; font-size: 16px; }
+    .btn:disabled, .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+    .callout { background: #eaf4fb; border: 1px solid #c0d9ef; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #0b4d85; margin: 12px 0; }
+    .callout strong { color: #0b4d85; }
+    .callout.warn { background: #fdf5e7; border-color: #f0d9a8; color: #8a5a17; }
+    .callout.warn strong { color: #8a5a17; }
+    .callout.ok { background: #e8f6ef; border-color: #c9e8d8; color: #1c6b45; }
+
+    /* Editor container */
+    #editor-host { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+
+    /* Preview modal */
+    #preview-modal {
+      position: fixed; inset: 0; background: rgba(15,30,60,0.55); display: none; z-index: 100;
+      align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto;
+    }
+    #preview-modal.open { display: flex; }
+    #preview-modal .pm-inner {
+      background: white; max-width: 860px; width: 100%; border-radius: 10px; padding: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    #preview-modal pre { background: #f2f6fb; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; max-height: 400px; }
+    #preview-modal h2 { margin-top: 0; }
+
+    /* Progress strip */
+    .progress {
+      display: flex; gap: 4px; margin-bottom: 28px;
+    }
+    .progress .p {
+      flex: 1; height: 6px; border-radius: 3px; background: var(--border);
+    }
+    .progress .p.on { background: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="/"><span class="brand-logo">E</span>EndoWiki</a>
+    <span style="opacity:0.7;">/</span>
+    <span>✏️ Compose</span>
+    <span style="flex:1;"></span>
+    <a href="/">← Back to wiki</a>
+  </div>
+
+  <div class="container">
+    <h1>Write a new entry</h1>
+    <p style="color:var(--muted); max-width: 700px;">Fill in the form. The body editor works like any document editor — use the toolbar for bold, headings, lists, images. When you click <strong>Publish</strong>, your entry is ready to go live on the wiki with one final confirmation click.</p>
+
+    <div class="progress">
+      <div class="p on" id="p1"></div>
+      <div class="p" id="p2"></div>
+      <div class="p" id="p3"></div>
+    </div>
+
+    <!-- Step 1: kind -->
+    <div class="card">
+      <h2><span class="step-num">1</span> What are you creating?</h2>
+      <div class="kind-picker">
+        <label>
+          <input type="radio" name="kind" value="article" />
+          <span class="kp-label">
+            <span class="kp-emoji">📚</span>
+            <span class="kp-title">Clinical article</span>
+            <span class="kp-desc">Technique, materials, diagnosis</span>
+          </span>
+        </label>
+        <label>
+          <input type="radio" name="kind" value="course" checked />
+          <span class="kp-label">
+            <span class="kp-emoji">🎓</span>
+            <span class="kp-title">Course review</span>
+            <span class="kp-desc">CE, masterclass, workshop</span>
+          </span>
+        </label>
+        <label>
+          <input type="radio" name="kind" value="equipment" />
+          <span class="kp-label">
+            <span class="kp-emoji">🔧</span>
+            <span class="kp-title">Equipment review</span>
+            <span class="kp-desc">Apex locator, motor, microscope…</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Step 2: fields -->
+    <div class="card" id="card-fields">
+      <h2><span class="step-num">2</span> Details</h2>
+
+      <div class="row">
+        <label for="title">Title <span style="color:var(--warn)">*</span></label>
+        <input type="text" id="title" placeholder="e.g. 'Styleitaliano Masterclass' or 'Managing calcified canals'" />
+      </div>
+
+      <div class="row" id="row-author">
+        <label for="author">Your name <span style="color:var(--warn)">*</span></label>
+        <input type="text" id="author" placeholder="e.g. Dr. Maria Rossi" />
+      </div>
+
+      <div id="review-fields">
+        <div class="row">
+          <label>Your rating <span style="color:var(--warn)">*</span></label>
+          <div class="stars-input" id="stars-input">
+            <button type="button" data-v="1" aria-label="1 star">★</button>
+            <button type="button" data-v="2" aria-label="2 stars">★</button>
+            <button type="button" data-v="3" aria-label="3 stars">★</button>
+            <button type="button" data-v="4" aria-label="4 stars">★</button>
+            <button type="button" data-v="5" aria-label="5 stars">★</button>
+            <span class="value-text" id="stars-value-text">Click to rate</span>
+          </div>
+        </div>
+
+        <div id="course-fields">
+          <div class="grid-2">
+            <div class="row">
+              <label for="provider">Provider (institution or company)</label>
+              <input type="text" id="provider" />
+            </div>
+            <div class="row">
+              <label for="instructor">Instructor(s)</label>
+              <input type="text" id="instructor" />
+            </div>
+            <div class="row">
+              <label for="format">Format</label>
+              <select id="format">
+                <option value="">—</option>
+                <option>In-person hands-on</option>
+                <option>In-person lecture</option>
+                <option>Online live</option>
+                <option>Online self-paced</option>
+                <option>Hybrid</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="location">Location</label>
+              <input type="text" id="location" placeholder="City, Country — or 'Online'" />
+            </div>
+            <div class="row">
+              <label for="duration">Duration</label>
+              <input type="text" id="duration" placeholder="e.g. 5 days, 25 hours" />
+            </div>
+            <div class="row">
+              <label for="price-c">Price</label>
+              <input type="text" id="price-c" placeholder="e.g. ~€3,200" />
+            </div>
+          </div>
+        </div>
+
+        <div id="equipment-fields" style="display:none;">
+          <div class="grid-2">
+            <div class="row">
+              <label for="brand">Brand</label>
+              <input type="text" id="brand" placeholder="e.g. Woodpecker" />
+            </div>
+            <div class="row">
+              <label for="model">Model</label>
+              <input type="text" id="model" placeholder="e.g. Woodpex III" />
+            </div>
+            <div class="row">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="">—</option>
+                <option>Apex locator</option>
+                <option>Endomotor</option>
+                <option>Microscope</option>
+                <option>File system</option>
+                <option>Obturation</option>
+                <option>Irrigation</option>
+                <option>Imaging</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="price-e">Price</label>
+              <input type="text" id="price-e" placeholder="e.g. ~$140 USD" />
+            </div>
+            <div class="row">
+              <label for="duration-used">How long you've used it</label>
+              <input type="text" id="duration-used" placeholder="e.g. 6 months of daily use" />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="row">
+            <label>Pros <span class="hint" style="display:block">(one per line)</span></label>
+            <div class="list-input" id="pros-input"></div>
+          </div>
+          <div class="row">
+            <label>Cons <span class="hint" style="display:block">(one per line)</span></label>
+            <div class="list-input" id="cons-input"></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="row">
+            <label for="would-recommend">Would you recommend?</label>
+            <select id="would-recommend">
+              <option value="yes">Yes — recommended</option>
+              <option value="mixed">Mixed — depends</option>
+              <option value="no">No — don't recommend</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="verdict">One-sentence verdict</label>
+            <input type="text" id="verdict" placeholder="e.g. 'Outstanding value for daily endo.'" />
+          </div>
+        </div>
+      </div>
+
+      <div id="article-fields" style="display:none;">
+        <div class="row">
+          <label for="summary">Short summary (1–2 sentences)</label>
+          <input type="text" id="summary" placeholder="Optional. Used in the article header and search snippets." />
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: body -->
+    <div class="card">
+      <h2><span class="step-num">3</span> Write the body</h2>
+      <p class="hint">Use the toolbar above the editor — <strong>B</strong> for bold, <em>I</em> for italic, headings, bullet lists, images. Just write naturally, like you would in any document editor.</p>
+      <div id="editor-host"></div>
+    </div>
+
+    <div class="callout" id="repo-status">Checking your wiki…</div>
+
+    <div class="actions">
+      <button class="btn big" id="btn-publish">📤 Publish to wiki →</button>
+      <button class="btn secondary" id="btn-preview">👁 Preview how it will look</button>
+      <button class="btn ghost" id="btn-download">⬇ Save a backup copy</button>
+      <span style="flex:1;"></span>
+      <a class="btn ghost" href="/">Cancel</a>
+    </div>
+  </div>
+
+  <div id="preview-modal">
+    <div class="pm-inner">
+      <h2>Preview</h2>
+      <p style="color:var(--muted);">This is how your entry will appear on the wiki.</p>
+      <div id="pm-rendered" style="border:1px solid var(--border); border-radius:8px; padding:20px; background:#fafcff; max-height:60vh; overflow-y:auto;"></div>
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button class="btn" id="pm-close">Looks good — close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+  <script src="assets/compose.js"></script>
+</body>
+</html>
