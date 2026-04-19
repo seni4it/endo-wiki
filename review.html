@@ -203,15 +203,19 @@
 
           '</div>';
 
-        // Render body markdown
+        // Render body markdown.
+        // Viewer bundle renders directly into `el`; no factory()/getHTML()
+        // which are only in the full editor bundle.
         if (r.body) {
-          var viewer = toastui.Editor.factory({
-            el: document.createElement('div'),
-            viewer: true,
-            initialValue: r.body,
-          });
           var bodyEl = document.getElementById('review-body-content');
-          if (bodyEl) bodyEl.innerHTML = viewer.getHTML();
+          if (bodyEl) {
+            try {
+              new toastui.Editor({ el: bodyEl, initialValue: r.body });
+            } catch (e) {
+              console.error('Markdown render failed:', e);
+              bodyEl.textContent = r.body;
+            }
+          }
         }
 
         // Render citation widget

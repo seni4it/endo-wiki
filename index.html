@@ -219,6 +219,9 @@
     }
 
     /* ── fetch & render ──────────────────────────── */
+    function kindPlural(kind) {
+      return kind === 'equipment' ? 'equipment reviews' : kind + ' entries';
+    }
     function loadFeed(kind, gridId, renderer) {
       var grid = document.getElementById(gridId);
       fetch('/api/list?kind=' + kind)
@@ -226,23 +229,26 @@
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.json();
         })
-        .then(function(items) {
-          if (!items || items.length === 0) {
-            grid.innerHTML = '<div class="feed-empty">No ' + kind + 's published yet. <a href="compose.html?kind=' + kind + '">Be the first to write one →</a></div>';
+        .then(function(data) {
+          // API returns { kind, items: [...] }
+          var items = (data && Array.isArray(data.items)) ? data.items : [];
+          if (items.length === 0) {
+            grid.innerHTML = '<div class="feed-empty">No ' + esc(kindPlural(kind)) + ' yet. <a href="compose.html?kind=' + kind + '">Be the first to write one →</a></div>';
+            var empKey = kind === 'article' ? 'stat-articles' : kind === 'course' ? 'stat-courses' : 'stat-equipment';
+            var empEl = document.getElementById(empKey);
+            if (empEl) empEl.textContent = '0';
             return;
           }
           grid.innerHTML = items.map(function(item, i) {
             var card = renderer(item, kind);
-            // Stagger animation delays
             return card.replace('anim-fade-up', 'anim-fade-up anim-delay-' + Math.min(i + 1, 4));
           }).join('');
-          // Update stat counter
           var statKey = kind === 'article' ? 'stat-articles' : kind === 'course' ? 'stat-courses' : 'stat-equipment';
           var statEl = document.getElementById(statKey);
           if (statEl) statEl.textContent = items.length;
         })
         .catch(function(err) {
-          grid.innerHTML = '<div class="feed-empty">Could not load ' + kind + 's. <a href="compose.html?kind=' + kind + '">Write one →</a></div>';
+          grid.innerHTML = '<div class="feed-empty">Could not load ' + esc(kindPlural(kind)) + '. <a href="compose.html?kind=' + kind + '">Write one →</a></div>';
           console.error('Feed error (' + kind + '):', err);
         });
     }

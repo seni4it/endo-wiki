@@ -1476,22 +1476,46 @@ select {
 .callout.warn { background: var(--warn-lt); border-color: var(--warn-border); color: var(--warn); }
 .callout strong { font-weight: 700; }
 
-/* Editor host */
+/* Editor host — must stand out from the warm page background.
+   Bug discovered in QA: without an explicit white surface + shadow, the editor
+   toolbar and content area blend into the cream page bg and look empty. */
 #editor-host {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-dk);
   border-radius: var(--r-md);
   overflow: hidden;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
 }
 /* Toast UI editor theme overrides */
 .toastui-editor-toolbar {
-  background: var(--divider) !important;
-  border-bottom: 1px solid var(--border) !important;
+  background: #f1edea !important;
+  border-bottom: 1px solid var(--border-dk) !important;
 }
 .toastui-editor-defaultUI {
   border: none !important;
+  background: #ffffff !important;
 }
 .toastui-editor-ww-container {
-  background: white !important;
+  background: #ffffff !important;
+}
+.toastui-editor-md-container {
+  background: #ffffff !important;
+}
+.toastui-editor-ww-container .toastui-editor-contents,
+.toastui-editor-md-container .toastui-editor-contents {
+  min-height: 360px;
+  padding: var(--s5) var(--s6) !important;
+  font-family: var(--font-body) !important;
+  font-size: 17px !important;
+  line-height: 1.7 !important;
+  color: var(--ink) !important;
+  background: #ffffff !important;
+}
+.toastui-editor-toolbar button {
+  color: var(--ink) !important;
+}
+.toastui-editor-toolbar-divider {
+  background: var(--border) !important;
 }
 
 /* Compose actions bar */
@@ -1727,4 +1751,49 @@ select {
   border-color: var(--ok);
   color: var(--ok);
   background: var(--ok-lt);
+}
+
+/* ─── Mobile hamburger nav (added by auth.js) ─────────────────────── */
+.nav-toggle-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.9);
+  padding: 6px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  margin-left: var(--s2);
+}
+.nav-toggle-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+.nav-toggle-btn:focus-visible { outline: 2px solid var(--oxblood); outline-offset: 2px; }
+
+@media (max-width: 640px) {
+  .site-nav .nav-toggle-btn { display: inline-flex; align-items: center; }
+
+  /* Move the toggle to the right, before the CTA, on mobile */
+  .site-nav .nav-links {
+    display: none;
+    position: absolute;
+    top: 56px;
+    left: 0; right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--ink);
+    border-bottom: 3px solid var(--oxblood);
+    padding: var(--s2) 0;
+    z-index: 99;
+    box-shadow: var(--shadow-md);
+  }
+  .site-nav.nav-open .nav-links {
+    display: flex;
+  }
+  .site-nav.nav-open .nav-links a {
+    padding: var(--s3) var(--s5);
+    border-radius: 0;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .site-nav.nav-open .nav-links a:last-child {
+    border-bottom: none;
+  }
 }

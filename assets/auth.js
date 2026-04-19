@@ -105,9 +105,47 @@
     id.init();
   }
 
+  // ─── Mobile nav hamburger ─────────────────────────────────────────
+  // Injects a toggle button that shows the hidden .nav-links as a dropdown
+  // on narrow viewports. QA found that <640px the nav links vanish with no
+  // replacement — this restores access.
+  function initMobileNav() {
+    const nav = document.querySelector(".site-nav");
+    if (!nav) return;
+    const links = nav.querySelector(".nav-links");
+    const inner = nav.querySelector(".site-nav-inner");
+    if (!links || !inner) return;
+    if (nav.querySelector(".nav-toggle-btn")) return; // already wired
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-toggle-btn";
+    btn.setAttribute("aria-label", "Toggle menu");
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML =
+      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+    btn.addEventListener("click", () => {
+      const open = nav.classList.toggle("nav-open");
+      btn.setAttribute("aria-expanded", String(open));
+    });
+
+    // Close when a link is clicked (so mobile users see the section they picked)
+    links.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        nav.classList.remove("nav-open");
+        btn.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    inner.insertBefore(btn, inner.firstChild.nextSibling);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", () => { init(); initMobileNav(); });
   } else {
     init();
+    initMobileNav();
   }
 })();

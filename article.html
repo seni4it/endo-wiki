@@ -118,14 +118,17 @@
             '</footer>' +
           '</div>';
 
-        // Render the markdown body via Toast UI viewer
+        // Render the markdown body.
+        // The viewer-only CDN bundle exposes `toastui.Editor` as a class that
+        // renders directly into its `el`. No `.factory()` or `getHTML()` needed.
         if (a.body) {
-          var viewer = toastui.Editor.factory({
-            el: document.createElement('div'),
-            viewer: true,
-            initialValue: a.body,
-          });
-          document.getElementById('article-body').innerHTML = viewer.getHTML();
+          var bodyEl = document.getElementById('article-body');
+          try {
+            new toastui.Editor({ el: bodyEl, initialValue: a.body });
+          } catch (e) {
+            console.error('Markdown render failed:', e);
+            bodyEl.textContent = a.body;
+          }
         }
 
         // Render citation widget
