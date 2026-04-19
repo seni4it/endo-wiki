@@ -12,8 +12,8 @@ backend:
     deleteMedia: "Delete “{{path}}”"
 
 # After first push, set this to the raw GitHub URL base so previews resolve images.
-site_url: https://YOUR-GITHUB-USERNAME.github.io/endo-wiki/
-display_url: https://YOUR-GITHUB-USERNAME.github.io/endo-wiki/
+site_url: https://seni4it.github.io/endo-wiki/
+display_url: https://seni4it.github.io/endo-wiki/
 logo_url: /assets/logo.svg
 
 media_folder: assets/uploads

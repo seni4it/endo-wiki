@@ -16,7 +16,7 @@
     window.$docsify = {
       name: '<span class="brand-logo">E</span> EndoWiki',
       // Replace with your GitHub repo after first push (owner/repo)
-      repo: 'YOUR-GITHUB-USERNAME/endo-wiki',
+      repo: 'seni4it/endo-wiki',
       homepage: 'home.md',
       loadSidebar: true,
       loadNavbar: true,
@@ -55,7 +55,7 @@
             var skip = /(^|\/)(_sidebar|_navbar|_coverpage|README)\.md$/i.test(path) ||
                        /^home\.md$/i.test(path);
             var repo = vm.config.repo;
-            var repoOk = repo && repo.indexOf('YOUR-GITHUB-USERNAME') === -1;
+            var repoOk = repo && repo.indexOf('/') !== -1 && repo.indexOf('YOUR-') === -1;
             var editHref = repoOk
               ? 'https://github.com/' + repo + '/edit/main/' + path
               : 'compose.html?edit=' + encodeURIComponent(path);

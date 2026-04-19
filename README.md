@@ -4,7 +4,7 @@ A community knowledge base for endodontists — peer-contributed clinical articl
 
 Built with [Docsify](https://docsify.js.org/) (no build step, pure markdown) and hosted for free on GitHub Pages. Non-technical contributors edit via [Decap CMS](https://decapcms.org/) — a visual editor in the browser that commits to git behind the scenes.
 
-**👉 Live site:** *after first deploy, will be at* `https://YOUR-GITHUB-USERNAME.github.io/endo-wiki/`
+**👉 Live site:** *after first deploy, will be at* `https://seni4it.github.io/endo-wiki/`
 
 ---
 
@@ -39,7 +39,7 @@ git push -u origin main
 
 ### 4. Update repo references
 
-Search-and-replace `YOUR-GITHUB-USERNAME` in these files, commit:
+Search-and-replace `seni4it` in these files, commit:
 
 - `index.html` — enables "Edit on GitHub" + "History" + "Discuss" links
 - `admin/config.yml` — the CMS site_url

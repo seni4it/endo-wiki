@@ -1,0 +1,10 @@
+{
+  "name": "endo-wiki",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A community knowledge base for endodontists.",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

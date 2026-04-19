@@ -1,0 +1,24 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Netlify Identity is enabled via the dashboard; Git Gateway is not used.
+# User-generated content is stored in Netlify Blobs via functions.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Friendly URLs for the dynamic pages
+[[redirects]]
+  from = "/a/*"
+  to = "/article.html?slug=:splat"
+  status = 200
+
+[[redirects]]
+  from = "/r/*"
+  to = "/review.html?slug=:splat"
+  status = 200

@@ -32,7 +32,7 @@ This needs a GitHub account but no other setup.
 If you prefer your own editor (VS Code, Typora, iA Writer):
 
 ```bash
-git clone https://github.com/YOUR-GITHUB-USERNAME/endo-wiki.git
+git clone https://github.com/seni4it/endo-wiki.git
 cd endo-wiki
 # edit files…
 git add -A && git commit -m "Describe your change" && git push
@@ -61,7 +61,7 @@ Contributions are **not** pre-moderated — your change is live immediately. Thi
 
 If you see a bad edit:
 - Small: just fix it and commit a clarifying note.
-- Large or malicious: open an issue (click 💬 Discuss on the article, or go directly to [the issues page](https://github.com/YOUR-GITHUB-USERNAME/endo-wiki/issues)). A maintainer will review.
+- Large or malicious: open an issue (click 💬 Discuss on the article, or go directly to [the issues page](https://github.com/seni4it/endo-wiki/issues)). A maintainer will review.
 
 Every edit is in git history forever — nothing is lost, and bad edits can be reverted with one click.
 
@@ -71,4 +71,4 @@ You keep authorship of whatever you write. Content is licensed [CC BY-SA 4.0](ht
 
 ---
 
-**Questions?** Open an [issue](https://github.com/YOUR-GITHUB-USERNAME/endo-wiki/issues) — someone will reply.
+**Questions?** Open an [issue](https://github.com/seni4it/endo-wiki/issues) — someone will reply.

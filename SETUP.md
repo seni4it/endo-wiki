@@ -62,11 +62,11 @@ If it says "Authentication required", follow the prompts. You only do this once.
 
 So the "Edit on GitHub" links work:
 
-1. In **Terminal**, replace `YOUR-GITHUB-USERNAME` with your actual GitHub username. Run:
+1. In **Terminal**, replace `seni4it` with your actual GitHub username. Run:
 
 ```bash
 cd ~/Documents/endo-wiki
-sed -i '' 's/YOUR-GITHUB-USERNAME/YOUR-USERNAME/g' index.html admin/config.yml contributing.md README.md SETUP.md
+sed -i '' 's/seni4it/YOUR-USERNAME/g' index.html admin/config.yml contributing.md README.md SETUP.md
 git add -A
 git commit -m "Set GitHub repo owner"
 git push
