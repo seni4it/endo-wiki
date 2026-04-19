@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EndoWiki — a knowledge base for endodontists</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Community knowledge base for endodontists: clinical articles, plus honest reviews of courses and equipment." />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,user-scalable=no,viewport-fit=cover" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b6fb8'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Segoe UI,sans-serif' font-weight='800' font-size='18' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/themes/vue.css" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div id="app">Loading EndoWiki…</div>
+  <script>
+    window.$docsify = {
+      name: '<span class="brand-logo">E</span> EndoWiki',
+      // Replace with your GitHub repo after first push (owner/repo)
+      repo: 'YOUR-GITHUB-USERNAME/endo-wiki',
+      homepage: 'home.md',
+      loadSidebar: true,
+      loadNavbar: true,
+      coverpage: true,
+      onlyCover: false,
+      auto2top: true,
+      maxLevel: 3,
+      subMaxLevel: 2,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search articles & reviews…',
+        noData: 'Nothing found.',
+        depth: 3,
+      },
+      pagination: {
+        previousText: '← Previous',
+        nextText: 'Next →',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+      copyCode: { buttonText: 'Copy', errorText: 'Error', successText: 'Copied' },
+      tabs: { persist: true, sync: true, theme: 'classic', tabComments: true, tabHeadings: true },
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md',
+        '/.*/_navbar.md': '/_navbar.md',
+      },
+      plugins: [
+        function (hook, vm) {
+          // "Edit this page" + "Open discussion on GitHub" footer on every page
+          hook.beforeEach(function (html) {
+            var repo = vm.config.repo;
+            if (!repo || repo.indexOf('YOUR-GITHUB-USERNAME') !== -1) return html;
+            var path = vm.route.file;
+            if (!path) return html;
+            var base = 'https://github.com/' + repo;
+            var editUrl = base + '/edit/main/' + path;
+            var historyUrl = base + '/commits/main/' + path;
+            var discussUrl = base + '/issues/new?title=' + encodeURIComponent('Discussion: ' + path) + '&body=' + encodeURIComponent('Discussion for article: ' + path);
+            var footer =
+              '\n\n---\n\n' +
+              '<small>' +
+              '✏️ <a href="' + editUrl + '" target="_blank" rel="noopener">Edit this page on GitHub</a> · ' +
+              '🕑 <a href="' + historyUrl + '" target="_blank" rel="noopener">History</a> · ' +
+              '💬 <a href="' + discussUrl + '" target="_blank" rel="noopener">Discuss</a>' +
+              '</small>\n';
+            return html + footer;
+          });
+        },
+      ],
+      // MathJax config
+      latex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+      // Mermaid
+      markdown: {
+        renderer: {
+          code: function (code, lang) {
+            if (lang === 'mermaid') {
+              return '<div class="mermaid">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          },
+        },
+      },
+    };
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-footnote/dist/docsify-footnote.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] } };
+  </script>
+  <script src="//polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
+  <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <script src="assets/reviews.js"></script>
+</body>
+</html>

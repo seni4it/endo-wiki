@@ -1,0 +1,136 @@
+/* EndoWiki — custom theme on top of Docsify Vue */
+:root {
+  --theme-color: #0b6fb8;
+  --theme-color-secondary: #2aa876;
+  --star: #f5a623;
+  --warn: #c75a30;
+  --ok: #2aa876;
+}
+
+/* Brand mark in sidebar header */
+.brand-logo {
+  display: inline-block;
+  width: 24px; height: 24px; line-height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #0b6fb8, #2aa876);
+  color: white; text-align: center; font-weight: 800; font-size: 14px;
+  margin-right: 6px; vertical-align: -3px;
+}
+
+/* Sidebar */
+.sidebar {
+  border-right: 1px solid #eef2f7;
+}
+.sidebar-nav li.active > a { font-weight: 700; }
+
+/* Cover page */
+section.cover .cover-main {
+  max-width: 780px;
+}
+section.cover .cover-main > p:last-child a {
+  background: #0b6fb8; border-color: #0b6fb8; color: white;
+}
+section.cover .cover-main > p:last-child a:hover {
+  background: #095a97; border-color: #095a97;
+}
+section.cover .cover-main > p:last-child a:last-child {
+  background: transparent; color: #0b6fb8; border-color: #0b6fb8;
+}
+section.cover .cover-main > p:last-child a:last-child:hover {
+  background: rgba(11,111,184,0.08);
+}
+section.cover.show { background: linear-gradient(135deg, #eaf2fb 0%, #e7f6ed 100%); }
+
+/* Content tweaks */
+.markdown-section h1, .markdown-section h2 { border-bottom: 1px solid #eef2f7; padding-bottom: 6px; }
+.markdown-section a { color: #0b6fb8; }
+.markdown-section blockquote { border-left: 3px solid #0b6fb8; color: #4a5668; background: #f5f9fd; padding: 10px 16px; }
+.markdown-section table { border-collapse: collapse; }
+.markdown-section table th { background: #f5f9fd; }
+
+/* Review card — styles applied by assets/reviews.js */
+.review-card {
+  border: 1px solid #dde3ec;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 18px 0;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15,30,60,0.05);
+}
+.review-card .review-head {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;
+}
+.review-card .review-title-block h3 { margin: 0 0 4px; font-size: 20px; border: none; padding: 0; }
+.review-card .review-meta { color: #5a6b80; font-size: 13px; }
+.review-card .kind-tag {
+  display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
+  padding: 2px 8px; border-radius: 10px; border: 1px solid transparent; vertical-align: middle;
+}
+.review-card .kind-tag.course { background: #eaf4fb; color: #0b6fb8; border-color: #cde4f3; }
+.review-card .kind-tag.equipment { background: #e8f6ef; color: #2aa876; border-color: #c9e8d8; }
+
+.review-card .stars { color: var(--star); font-size: 20px; letter-spacing: 2px; white-space: nowrap; }
+.review-card .stars .empty { color: #d9dee6; }
+
+.review-card .facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 20px; font-size: 14px; margin: 14px 0 16px;
+  padding: 12px 14px; background: #f7f9fc; border-radius: 8px;
+}
+.review-card .facts .k { color: #5a6b80; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 2px; }
+.review-card .facts .v { color: #1a2330; }
+
+.review-card .proscons {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 12px;
+}
+@media (max-width: 640px) { .review-card .proscons { grid-template-columns: 1fr; } }
+.review-card .proscons .pros h4 { color: var(--ok); margin: 0 0 6px; font-size: 14px; border: none; padding: 0; }
+.review-card .proscons .cons h4 { color: var(--warn); margin: 0 0 6px; font-size: 14px; border: none; padding: 0; }
+.review-card .proscons ul { margin: 0; padding-left: 20px; }
+
+.review-card .verdict { margin-top: 14px; padding: 10px 14px; border-radius: 6px; font-size: 14px; }
+.review-card .verdict.yes { background: #e8f6ef; color: #1c6b45; border: 1px solid #c9e8d8; }
+.review-card .verdict.no  { background: #fdeceb; color: #9c2b17; border: 1px solid #f2c4bc; }
+.review-card .verdict.mixed { background: #fdf5e7; color: #8a5a17; border: 1px solid #f0d9a8; }
+
+/* Lists of reviews */
+.review-list { display: grid; gap: 12px; }
+.review-list .review-listing {
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid #dde3ec; border-radius: 8px; background: white;
+  text-decoration: none; color: inherit;
+}
+.review-list .review-listing:hover { border-color: #0b6fb8; background: #f7fbff; }
+.review-list .review-listing .r-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.review-list .review-listing .r-meta { color: #5a6b80; font-size: 13px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.review-list .review-listing .r-stars { color: var(--star); letter-spacing: 1px; }
+
+/* Hero on home */
+.home-hero {
+  margin: -16px -16px 28px;
+  padding: 40px 28px;
+  background: linear-gradient(135deg, #0b6fb8 0%, #2aa876 100%);
+  color: white;
+  border-radius: 12px;
+}
+.home-hero h1 { margin: 0 0 10px; border: none; color: white; font-size: 34px; }
+.home-hero p { opacity: 0.95; max-width: 640px; font-size: 17px; margin: 0; }
+.home-hero .hero-actions { margin-top: 18px; }
+.home-hero .hero-actions a {
+  display: inline-block; padding: 10px 18px; border-radius: 8px;
+  background: white; color: #0b6fb8; font-weight: 600; margin-right: 8px;
+  text-decoration: none;
+}
+.home-hero .hero-actions a.secondary {
+  background: transparent; color: white; border: 1px solid rgba(255,255,255,0.6);
+}
+
+.home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 20px 0; }
+.home-cards .hc {
+  padding: 20px; border: 1px solid #dde3ec; border-radius: 10px; background: white;
+  text-decoration: none; color: inherit; display: block;
+}
+.home-cards .hc:hover { border-color: #0b6fb8; }
+.home-cards .hc h3 { margin: 0 0 6px; font-size: 17px; border: none; padding: 0; color: #0b6fb8; }
+.home-cards .hc p { margin: 0; color: #5a6b80; font-size: 14px; }

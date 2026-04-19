@@ -1,0 +1,5 @@
+- [Articles](articles/)
+- [Courses](reviews/courses/)
+- [Equipment](reviews/equipment/)
+- [Contribute](contributing.md)
+- [Edit in browser](/admin/)
