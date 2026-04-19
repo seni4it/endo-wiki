@@ -1,38 +1,30 @@
-# Zeiss Extaro 300 microscope
-
-<script type="application/json" id="review-data">
-{
-  "kind": "equipment",
-  "title": "Zeiss Extaro 300 microscope",
-  "rating": 4,
-  "author": "Dr. Sample Author",
-  "date": "2026-03",
-  "brand": "Carl Zeiss Meditec",
-  "model": "Extaro 300",
-  "category": "Operating microscope",
-  "price": "~$38,000 (base configuration with wall mount, European pricing, 2025)",
-  "date_bought": "2024-08",
-  "duration_used": "~18 months, daily use for endo and restorative",
-  "pros": [
-    "Apochromatic optics — color fidelity under the scope is the best I've used",
-    "Integrated fluorescence mode highlights caries and restorative margins (actually useful, not a gimmick)",
-    "Counterbalance arm holds position precisely; no drift during long cases",
-    "Built-in documentation camera at full 4K with an SD card slot — you can hand the patient a clip after the case",
-    "Tissue illumination (white + amber + UV-filtered modes) is better than any other microscope I've worked under"
-  ],
-  "cons": [
-    "Learning curve on the illumination modes — takes a couple of weeks to know when to use what",
-    "Zeiss service response times in our region (Southern Europe) can be slow for non-critical issues",
-    "Heavy — wall mount requires actual engineering, not a drywall anchor",
-    "The fluorescence mode is dependent on specific indicator dyes to reach its full potential; useful without them, better with them",
-    "Price is the top of the market; a well-used Leica M320 does 80% of the job for half the cost"
-  ],
-  "would_recommend": true,
-  "verdict": "If you can justify the price, it is the best microscope I have worked with. If you cannot, a Leica M320 or a used high-spec Global G6 will serve you almost as well."
-}
-</script>
-
-<div id="review-card"></div>
+---
+kind: equipment
+title: Zeiss Extaro 300 microscope
+rating: 4
+author: Dr. Sample Author
+date: 2026-03
+brand: Carl Zeiss Meditec
+model: Extaro 300
+category: Microscope
+price: ~$38,000 (base configuration with wall mount, European pricing, 2025)
+date_bought: 2024-08
+duration_used: ~18 months, daily use for endo and restorative
+pros:
+  - Apochromatic optics — color fidelity under the scope is the best I've used
+  - Integrated fluorescence mode highlights caries and restorative margins (actually useful, not a gimmick)
+  - Counterbalance arm holds position precisely; no drift during long cases
+  - Built-in documentation camera at full 4K with an SD card slot — you can hand the patient a clip after the case
+  - Tissue illumination (white + amber + UV-filtered modes) is better than any other microscope I've worked under
+cons:
+  - Learning curve on the illumination modes — takes a couple of weeks to know when to use what
+  - Zeiss service response times in our region (Southern Europe) can be slow for non-critical issues
+  - Heavy — wall mount requires actual engineering, not a drywall anchor
+  - The fluorescence mode is dependent on specific indicator dyes to reach its full potential; useful without them, better with them
+  - Price is the top of the market; a well-used Leica M320 does 80% of the job for half the cost
+would_recommend: yes
+verdict: If you can justify the price, it is the best microscope I have worked with. If you cannot, a Leica M320 or a used high-spec Global G6 will serve you almost as well.
+---
 
 *Disclosure: Purchased through a standard dealer contract. No relationship with Zeiss beyond being a paying customer.*
 

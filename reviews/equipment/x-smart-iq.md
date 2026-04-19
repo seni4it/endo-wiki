@@ -1,38 +1,30 @@
-# X-Smart IQ endomotor
-
-<script type="application/json" id="review-data">
-{
-  "kind": "equipment",
-  "title": "X-Smart IQ endomotor",
-  "rating": 4,
-  "author": "Dr. Sample Author",
-  "date": "2026-02",
-  "brand": "Dentsply Sirona",
-  "model": "X-Smart IQ",
-  "category": "Endomotor (cordless, iPad-controlled)",
-  "price": "~$1,800 (with iPad-compatible case; iPad not included)",
-  "date_bought": "2025-04",
-  "duration_used": "~10 months, several cases per week",
-  "pros": [
-    "iPad app gives you a large, clean torque and speed display — easier than reading tiny unit screens",
-    "Cordless handpiece — no cable snag, balanced weight",
-    "Pre-loaded torque / speed presets for most Dentsply file systems, easy to customize per file",
-    "Apical reverse and auto-stop work reliably when connected to a supported apex locator",
-    "Battery lasts a full clinical day"
-  ],
-  "cons": [
-    "You need the iPad — no unit-screen fallback if the app crashes mid-case",
-    "Tied to Dentsply's ecosystem; works with third-party files but presets are for ProTaper/WaveOne/TruNatomy",
-    "App has hung or lost pairing twice in 10 months — rare but memorable",
-    "Price is hard to justify if you're already happy with a corded unit",
-    "Sterilization of the handpiece head is the same procedure as older motors, no workflow upgrade there"
-  ],
-  "would_recommend": true,
-  "verdict": "Premium product that genuinely improves ergonomics for high-volume endodontic practices. Overkill for occasional endo."
-}
-</script>
-
-<div id="review-card"></div>
+---
+kind: equipment
+title: X-Smart IQ endomotor
+rating: 4
+author: Dr. Sample Author
+date: 2026-02
+brand: Dentsply Sirona
+model: X-Smart IQ
+category: Endomotor
+price: ~$1,800 (with iPad-compatible case; iPad not included)
+date_bought: 2025-04
+duration_used: ~10 months, several cases per week
+pros:
+  - iPad app gives you a large, clean torque and speed display — easier than reading tiny unit screens
+  - Cordless handpiece — no cable snag, balanced weight
+  - Pre-loaded torque / speed presets for most Dentsply file systems, easy to customize per file
+  - Apical reverse and auto-stop work reliably when connected to a supported apex locator
+  - Battery lasts a full clinical day
+cons:
+  - You need the iPad — no unit-screen fallback if the app crashes mid-case
+  - Tied to Dentsply's ecosystem; works with third-party files but presets are for ProTaper/WaveOne/TruNatomy
+  - App has hung or lost pairing twice in 10 months — rare but memorable
+  - Price is hard to justify if you're already happy with a corded unit
+  - Sterilization of the handpiece head is the same procedure as older motors, no workflow upgrade there
+would_recommend: yes
+verdict: Premium product that genuinely improves ergonomics for high-volume endodontic practices. Overkill for occasional endo.
+---
 
 *Disclosure: I paid retail. No relationship with Dentsply Sirona.*
 

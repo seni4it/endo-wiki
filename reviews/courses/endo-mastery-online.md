@@ -1,37 +1,29 @@
-# Endo Mastery online CE
-
-<script type="application/json" id="review-data">
-{
-  "kind": "course",
-  "title": "Endo Mastery online CE",
-  "rating": 3,
-  "author": "Dr. Sample Author",
-  "date": "2026-01",
-  "provider": "Endo Mastery (US-based online CE provider)",
-  "instructor": "Rotating faculty (recorded lectures + occasional live Q&A)",
-  "location": "Online, self-paced",
-  "format": "Online self-paced (video + downloadable notes + quizzes)",
-  "duration": "~25 hours of content, 6-month access",
-  "price": "~$495 (CE credits approved in most US states)",
-  "date_taken": "2025-10",
-  "pros": [
-    "Good production quality — microscope footage is crisp and well-captioned",
-    "CE credits accepted by most state boards in the US",
-    "Per-hour cost is low for the content quality",
-    "You can watch a segment, try the technique next day, and rewatch — the repeat viewing is valuable"
-  ],
-  "cons": [
-    "No hands-on component — the whole experience is passive video",
-    "Faculty style varies a lot; some lectures are excellent, others feel like marketing for a specific file system",
-    "Live Q&A sessions are optional and scheduled in US timezones only",
-    "Community / discussion forum is thin — you're mostly on your own"
-  ],
-  "would_recommend": "mixed",
-  "verdict": "Fine as a supplement. Do not expect it to replace a hands-on course."
-}
-</script>
-
-<div id="review-card"></div>
+---
+kind: course
+title: Endo Mastery online CE
+rating: 3
+author: Dr. Sample Author
+date: 2026-01
+provider: Endo Mastery (US-based online CE provider)
+instructor: Rotating faculty (recorded lectures + occasional live Q&A)
+location: Online, self-paced
+format: Online self-paced
+duration: ~25 hours of content, 6-month access
+price: ~$495 (CE credits approved in most US states)
+date_taken: 2025-10
+pros:
+  - Good production quality — microscope footage is crisp and well-captioned
+  - CE credits accepted by most state boards in the US
+  - Per-hour cost is low for the content quality
+  - You can watch a segment, try the technique next day, and rewatch — the repeat viewing is valuable
+cons:
+  - No hands-on component — the whole experience is passive video
+  - Faculty style varies a lot; some lectures are excellent, others feel like marketing for a specific file system
+  - Live Q&A sessions are optional and scheduled in US timezones only
+  - Community / discussion forum is thin — you're mostly on your own
+would_recommend: mixed
+verdict: Fine as a supplement. Do not expect it to replace a hands-on course.
+---
 
 ## Who this is for
 

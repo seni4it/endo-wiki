@@ -1,38 +1,30 @@
-# Styleitaliano Endodontics Masterclass
-
-<script type="application/json" id="review-data">
-{
-  "kind": "course",
-  "title": "Styleitaliano Endodontics Masterclass",
-  "rating": 5,
-  "author": "Dr. Sample Author",
-  "date": "2026-02",
-  "provider": "Styleitaliano Endodontics",
-  "instructor": "Marco Martignoni, Arnaldo Castellucci, et al.",
-  "location": "Rome, Italy",
-  "format": "In-person hands-on",
-  "duration": "5 days",
-  "price": "~€3,200",
-  "date_taken": "2025-11",
-  "pros": [
-    "Live treatment demonstrations on actual patients — not mannequins",
-    "Hands-on sessions on extracted teeth with real anatomy (calcified, severely curved, resorption cases)",
-    "Very small instructor-to-participant ratio (about 1:4 during hands-on)",
-    "Strong emphasis on magnification and microsurgical skills, not just file handling",
-    "Good balance between technique and decision-making ('when to treat vs. when to refer')"
-  ],
-  "cons": [
-    "Price is at the top of the European market",
-    "Intense schedule — 10-hour days, limited downtime",
-    "Heavy focus on NiTi systems used by the faculty (ProTaper Gold / TruNatomy); less coverage of reciprocating systems",
-    "Rome is expensive for accommodation; factor another ~€800–1,200 for the week"
-  ],
-  "would_recommend": true,
-  "verdict": "The best endodontic hands-on I have taken. Worth the price if you want to seriously upgrade case selection and apical third management."
-}
-</script>
-
-<div id="review-card"></div>
+---
+kind: course
+title: Styleitaliano Endodontics Masterclass
+rating: 5
+author: Dr. Sample Author
+date: 2026-02
+provider: Styleitaliano Endodontics
+instructor: Marco Martignoni, Arnaldo Castellucci, et al.
+location: Rome, Italy
+format: In-person hands-on
+duration: 5 days
+price: ~€3,200
+date_taken: 2025-11
+pros:
+  - Live treatment demonstrations on actual patients — not mannequins
+  - Hands-on sessions on extracted teeth with real anatomy (calcified, severely curved, resorption cases)
+  - Very small instructor-to-participant ratio (about 1:4 during hands-on)
+  - Strong emphasis on magnification and microsurgical skills, not just file handling
+  - Good balance between technique and decision-making ('when to treat vs. when to refer')
+cons:
+  - Price is at the top of the European market
+  - Intense schedule — 10-hour days, limited downtime
+  - Heavy focus on NiTi systems used by the faculty (ProTaper Gold / TruNatomy); less coverage of reciprocating systems
+  - Rome is expensive for accommodation; factor another ~€800–1,200 for the week
+would_recommend: yes
+verdict: The best endodontic hands-on I have taken. Worth the price if you want to seriously upgrade case selection and apical third management.
+---
 
 *Disclosure: I paid the standard course fee myself. No relationship with the organizers.*
 

@@ -1,37 +1,29 @@
-# Woodpex III apex locator
-
-<script type="application/json" id="review-data">
-{
-  "kind": "equipment",
-  "title": "Woodpex III apex locator",
-  "rating": 4,
-  "author": "Dr. Sample Author",
-  "date": "2026-01",
-  "brand": "Woodpecker",
-  "model": "Woodpex III",
-  "category": "Apex locator",
-  "price": "~$140 (US street price)",
-  "date_bought": "2025-07",
-  "duration_used": "~6 months, daily use",
-  "pros": [
-    "Excellent accuracy for the price — matches the high-end devices in routine cases",
-    "Clear color display, visible under operatory light",
-    "Rechargeable battery lasts a full week of busy endo days",
-    "Build quality feels better than the price suggests",
-    "Works reliably in the presence of hypochlorite and blood when canal is briefly dried"
-  ],
-  "cons": [
-    "Audio feedback tones are not adjustable enough — assistants find them shrill",
-    "Lip clip and file clip cables are shorter than I'd like; expect to reach across the patient",
-    "Wide-open apices (immature teeth, resorption) give unreliable readings, as with most apex locators",
-    "Manual is translated from Chinese and is unhelpful for advanced features"
-  ],
-  "would_recommend": true,
-  "verdict": "Outstanding value. Accuracy comparable to devices at 3× the price for routine endodontic cases."
-}
-</script>
-
-<div id="review-card"></div>
+---
+kind: equipment
+title: Woodpex III apex locator
+rating: 4
+author: Dr. Sample Author
+date: 2026-01
+brand: Woodpecker
+model: Woodpex III
+category: Apex locator
+price: ~$140 (US street price)
+date_bought: 2025-07
+duration_used: ~6 months, daily use
+pros:
+  - Excellent accuracy for the price — matches the high-end devices in routine cases
+  - Clear color display, visible under operatory light
+  - Rechargeable battery lasts a full week of busy endo days
+  - Build quality feels better than the price suggests
+  - Works reliably in the presence of hypochlorite and blood when canal is briefly dried
+cons:
+  - Audio feedback tones are not adjustable enough — assistants find them shrill
+  - Lip clip and file clip cables are shorter than I'd like; expect to reach across the patient
+  - Wide-open apices (immature teeth, resorption) give unreliable readings, as with most apex locators
+  - Manual is translated from Chinese and is unhelpful for advanced features
+would_recommend: yes
+verdict: Outstanding value. Accuracy comparable to devices at 3× the price for routine endodontic cases.
+---
 
 ## What I was using before
 
