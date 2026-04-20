@@ -1,82 +1,80 @@
-// Shared helper: extract the Netlify Identity user from a request.
+// Shared helper: verify the Netlify Identity user on a request.
 //
-// Netlify's Functions v2 runtime does NOT reliably populate
-// context.clientContext.user. We therefore read the JWT from the
-// Authorization: Bearer <token> header and decode its payload.
+// Why this file is more complex than a naive JWT decode:
+//   - Netlify Identity signs JWTs with a per-instance HS256 secret that is
+//     NOT exposed to v2 Functions at runtime.
+//   - No JWKS endpoint exists (Identity is symmetric, not asymmetric).
+//   - `context.clientContext.user` is unreliable in v2 Functions — sometimes
+//     populated, sometimes not.
 //
-// Security note: we are decoding the payload without signature verification.
-// This is acceptable here because:
-//   1. Forgery requires knowing Netlify Identity's signing key.
-//   2. Impact of a forged JWT is limited (can publish, can't escalate).
-//   3. The rate limiter bounds any abuse.
-// For stricter guarantees, verify against the Identity JWKS:
-//   https://<site>.netlify.app/.netlify/identity/.well-known/jwks.json
+// The canonical way to verify a user is to call Identity's own `/user`
+// endpoint with the same Authorization header. Identity validates the token
+// against its private secret and returns the user object if valid, or 401.
+// This is the same mechanism the official @netlify/functions Identity helpers
+// use under the hood.
 
-export function b64UrlDecode(str) {
-  // Convert base64url to base64, pad, decode
-  const b64 = str.replace(/-/g, "+").replace(/_/g, "/");
-  const pad = b64.length % 4;
-  const padded = pad ? b64 + "=".repeat(4 - pad) : b64;
-  // atob is available in Netlify's Deno-like runtime
-  if (typeof atob === "function") {
-    return atob(padded);
-  }
-  // Node fallback
-  return Buffer.from(padded, "base64").toString("utf8");
-}
-
-export function decodeJwt(token) {
-  if (!token || typeof token !== "string") return null;
-  const parts = token.split(".");
-  if (parts.length !== 3) return null;
+function getSiteBaseUrl(req) {
+  // Prefer the request's own origin so this works across branch deploys,
+  // preview URLs, and the production domain.
   try {
-    const payloadJson = b64UrlDecode(parts[1]);
-    return JSON.parse(payloadJson);
+    const url = new URL(req.url);
+    return `${url.protocol}//${url.host}`;
   } catch (e) {
-    return null;
+    return "https://endo-wiki-31401.netlify.app";
   }
 }
 
-// Returns the Identity user object (or null) given a request + context.
-// Tries context.clientContext first (works when Netlify injects it),
-// falls back to parsing the Authorization header.
-export function getIdentityUser(req, context) {
-  // 1. Classic clientContext (sometimes populated)
-  const ccUser = context?.clientContext?.user;
-  if (ccUser && (ccUser.sub || ccUser.id)) {
-    return normalizeUser(ccUser);
-  }
-
-  // 2. Parse Authorization: Bearer <jwt>
-  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization") || "";
-  const match = authHeader.match(/^\s*Bearer\s+(.+)$/i);
-  if (!match) return null;
-
-  const payload = decodeJwt(match[1].trim());
-  if (!payload) return null;
-
-  // Check exp if present
-  if (payload.exp && Date.now() / 1000 > payload.exp) {
-    return null;
-  }
-
-  return normalizeUser(payload);
+function extractBearer(req) {
+  const h = req.headers.get("authorization") || req.headers.get("Authorization") || "";
+  const m = h.match(/^\s*Bearer\s+(.+)$/i);
+  return m ? m[1].trim() : null;
 }
 
-// Normalise different JWT claim shapes into a consistent user object.
 function normalizeUser(u) {
   const sub = u.sub || u.id;
   if (!sub) return null;
   return {
     sub: sub,
-    email: u.email,
-    // Netlify Identity JWT structure:
-    //   user_metadata.full_name
-    //   app_metadata.roles
+    email: u.email || null,
     user_metadata: u.user_metadata || {},
     app_metadata: u.app_metadata || {},
-    // Helpful flattening
-    full_name: u.user_metadata?.full_name || null,
+    full_name:
+      u.user_metadata?.full_name ||
+      u.user_metadata?.name ||
+      null,
     roles: u.app_metadata?.roles || [],
   };
+}
+
+// Returns a verified user, or null if token is missing/invalid/expired.
+// Verification is done by asking Identity to decode the token for us.
+export async function getIdentityUser(req, context) {
+  // 1. Prefer clientContext if Netlify injected it (v1 Lambda path)
+  const ccUser = context?.clientContext?.user;
+  if (ccUser && (ccUser.sub || ccUser.id)) {
+    return normalizeUser(ccUser);
+  }
+
+  // 2. Extract the Bearer token and verify via Identity /user endpoint
+  const token = extractBearer(req);
+  if (!token) return null;
+
+  const base = getSiteBaseUrl(req);
+  try {
+    const res = await fetch(`${base}/.netlify/identity/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      // 401 = bad/expired token; 404 = Identity not enabled
+      return null;
+    }
+    const u = await res.json();
+    return normalizeUser(u);
+  } catch (e) {
+    // Network / parsing error — treat as unauthenticated
+    return null;
+  }
 }

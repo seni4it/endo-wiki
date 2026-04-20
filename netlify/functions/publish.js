@@ -45,7 +45,7 @@ export default async (req, context) => {
     return json(405, { error: "Method not allowed" });
   }
 
-  const user = getIdentityUser(req, context);
+  const user = await getIdentityUser(req, context);
   if (!user || !user.sub) {
     return json(401, { error: "Please log in to publish." });
   }
