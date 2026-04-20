@@ -22,10 +22,10 @@
         'EndoWiki' +
       '</a>' +
       '<div class="nav-links" role="list">' +
-        '<a href="/#articles" role="listitem" data-nav-key="articles">Articles</a>' +
-        '<a href="/#courses" role="listitem" data-nav-key="courses">Courses</a>' +
-        '<a href="/#equipment" role="listitem" data-nav-key="equipment">Equipment</a>' +
-        '<a href="contributing.html" role="listitem" data-nav-key="contribute">Contribute</a>' +
+        '<a href="/articles/" role="listitem" data-nav-key="articles">Articles</a>' +
+        '<a href="/courses/" role="listitem" data-nav-key="courses">Courses</a>' +
+        '<a href="/equipment/" role="listitem" data-nav-key="equipment">Equipment</a>' +
+        '<a href="/contributing.html" role="listitem" data-nav-key="contribute">Contribute</a>' +
       '</div>' +
       '<div class="nav-right">' +
         '{{CTA}}' +

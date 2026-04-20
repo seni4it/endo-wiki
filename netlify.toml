@@ -65,6 +65,32 @@
   to = "/subject.html"
   status = 200
 
+# Browse index pages: /articles/, /courses/, /equipment/
+[[redirects]]
+  from = "/articles"
+  to = "/browse.html?kind=article"
+  status = 200
+[[redirects]]
+  from = "/articles/"
+  to = "/browse.html?kind=article"
+  status = 200
+[[redirects]]
+  from = "/courses"
+  to = "/browse.html?kind=course"
+  status = 200
+[[redirects]]
+  from = "/courses/"
+  to = "/browse.html?kind=course"
+  status = 200
+[[redirects]]
+  from = "/equipment"
+  to = "/browse.html?kind=equipment"
+  status = 200
+[[redirects]]
+  from = "/equipment/"
+  to = "/browse.html?kind=equipment"
+  status = 200
+
 # The old Decap CMS admin directory is gone — redirect to the composer
 [[redirects]]
   from = "/admin"

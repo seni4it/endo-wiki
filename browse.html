@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Browse — EndoWiki</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Browse every article, course review, or equipment review on EndoWiki." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%238B2B2B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='20' fill='white'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+  <script src="assets/chrome.js" defer></script>
+  <script src="assets/auth.js" defer></script>
+  <style>
+    /* Hero kept compact — this is a browse page, not a marketing surface */
+    .browse-hero {
+      background:
+        radial-gradient(1200px 600px at 75% -10%, rgba(139,43,43,0.18), transparent 55%),
+        linear-gradient(180deg, #11182a 0%, #1a2438 100%);
+      color: #f5f3ee;
+      border-bottom: 3px solid var(--oxblood);
+      padding: var(--s7) var(--s5) var(--s6);
+    }
+    .browse-hero-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .browse-kicker {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,243,238,0.62);
+      margin-bottom: var(--s3);
+    }
+    .browse-kicker .sep { color: rgba(245,243,238,0.3); margin: 0 10px; }
+    .browse-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--s2);
+      color: #ffffff;
+    }
+    .browse-tagline {
+      font-family: var(--font-display);
+      font-size: 18px;
+      line-height: 1.5;
+      font-style: italic;
+      color: rgba(245,243,238,0.75);
+      max-width: 640px;
+      margin: 0 0 var(--s5);
+    }
+
+    /* Filter bar */
+    .browse-toolbar {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: var(--s5) var(--s5) 0;
+      display: flex;
+      gap: var(--s3);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 11px 16px;
+      border: 1px solid var(--border-dk);
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .filter-input:focus {
+      border-color: var(--oxblood);
+      box-shadow: 0 0 0 3px rgba(139, 43, 43, 0.12);
+    }
+    .sort-select {
+      padding: 11px 36px 11px 14px;
+      border: 1px solid var(--border-dk);
+      border-radius: var(--r-md);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%231a2438' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+      background-size: 12px;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .result-count {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-left: auto;
+    }
+
+    /* Grid */
+    .browse-main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: var(--s5) var(--s5) var(--s9);
+    }
+    .browse-grid {
+      display: grid;
+      gap: var(--s4);
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    .browse-card {
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 0;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .browse-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-dk);
+    }
+    .browse-card-photo {
+      aspect-ratio: 16 / 9;
+      background: #f0ece7;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .browse-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .browse-card-photo-empty {
+      color: var(--ink-faint);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .browse-card-body {
+      padding: var(--s4) var(--s5) var(--s5);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .browse-card-kind {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--s2);
+    }
+    .browse-card-kind.article { color: var(--ink); }
+    .browse-card-kind.course { color: #1c6b45; }
+    .browse-card-kind.equipment { color: #8a5a17; }
+    .browse-card-title {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0 0 var(--s2);
+    }
+    .browse-card:hover .browse-card-title { color: var(--oxblood); }
+    .browse-card-summary {
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--ink-muted);
+      margin: 0 0 var(--s3);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+    .browse-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--s2);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--ink-faint);
+      padding-top: var(--s3);
+      border-top: 1px solid var(--divider);
+    }
+    .browse-card-author { font-weight: 600; color: var(--ink-muted); }
+    .browse-card-stars {
+      color: #d49b1a;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
+    }
+    .browse-card-stars .empty { color: #e5eaf0; }
+
+    .empty-state,
+    .loading-state-full {
+      text-align: center;
+      padding: var(--s9) var(--s5);
+      color: var(--ink-muted);
+      font-family: var(--font-ui);
+      grid-column: 1 / -1;
+    }
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--ink);
+      margin: 0 0 var(--s2);
+    }
+    .empty-state p { font-size: 14px; line-height: 1.6; margin: 0 0 var(--s3); }
+    .empty-state a.cta {
+      display: inline-block;
+      padding: 12px 20px;
+      background: var(--oxblood);
+      color: white;
+      border-radius: var(--r-sm);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .empty-state a.cta:hover { background: #9a3333; }
+  </style>
+</head>
+<body>
+  <nav id="site-nav"></nav>
+
+  <header class="browse-hero" id="hero">
+    <div class="browse-hero-inner">
+      <div class="browse-kicker">
+        <a href="/" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(245,243,238,0.3);">EndoWiki</a>
+        <span class="sep">›</span>
+        <span id="hero-breadcrumb">Browse</span>
+      </div>
+      <h1 class="browse-title" id="hero-title">Browse</h1>
+      <p class="browse-tagline" id="hero-tagline">Every entry, sorted the way you want it.</p>
+    </div>
+  </header>
+
+  <div class="browse-toolbar">
+    <input type="search" class="filter-input" id="filter-input"
+      placeholder="Filter by title, author, or keyword…" aria-label="Filter entries" />
+    <select class="sort-select" id="sort-select" aria-label="Sort order">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="title">Title (A–Z)</option>
+      <option value="rating">Highest rated</option>
+    </select>
+    <span class="result-count" id="result-count">Loading…</span>
+  </div>
+
+  <main class="browse-main">
+    <div class="browse-grid" id="grid">
+      <div class="loading-state-full" role="status" aria-live="polite">
+        <span>Loading…</span>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script>
+    (function () {
+      function esc(s) {
+        return String(s || "").replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function fmtDate(iso) {
+        if (!iso) return "";
+        var d = new Date(iso);
+        return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+      }
+      function stars(n) {
+        var r = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+        return '<span class="browse-card-stars">' + "★".repeat(r) + '<span class="empty">' + "☆".repeat(5 - r) + "</span></span>";
+      }
+
+      // Which kind to browse? Path-based first (/articles/, /courses/, /equipment/),
+      // then ?kind= query param, then default to articles.
+      var path = location.pathname.replace(/\/+$/, "");
+      var kind;
+      if (/\/(articles?)$/.test(path)) kind = "article";
+      else if (/\/(courses?)$/.test(path)) kind = "course";
+      else if (/\/(equipments?)$/.test(path)) kind = "equipment";
+      else kind = new URLSearchParams(location.search).get("kind") || "article";
+      if (!["article", "course", "equipment"].includes(kind)) kind = "article";
+
+      var titles = {
+        article:   { h1: "Clinical articles",   tagline: "Peer-contributed articles on technique, materials, diagnosis, and outcomes. Browse every article on the wiki.",                       empty: "No articles have been published yet.",          cta: "Write the first article",    crumb: "Articles",   ctaPath: "compose.html?kind=article" },
+        course:    { h1: "Course reviews",      tagline: "Honest reviews of CE courses, masterclasses, hands-on workshops, and online programs. Written by specialists who actually took them.", empty: "No course reviews yet.",                         cta: "Write the first review",     crumb: "Courses",    ctaPath: "compose.html?kind=course" },
+        equipment: { h1: "Equipment reviews",   tagline: "Apex locators, motors, microscopes, files, obturation systems, irrigation kit. Real use in real clinics.",                              empty: "No equipment reviews yet.",                      cta: "Write the first review",     crumb: "Equipment",  ctaPath: "compose.html?kind=equipment" }
+      };
+      var meta = titles[kind];
+      document.title = meta.h1 + " — EndoWiki";
+      document.getElementById("hero-title").textContent = meta.h1;
+      document.getElementById("hero-tagline").textContent = meta.tagline;
+      document.getElementById("hero-breadcrumb").textContent = meta.crumb;
+      // Match active nav link
+      document.body.dataset.activeNav = kind === "article" ? "articles" : kind === "course" ? "courses" : "equipment";
+
+      var allItems = [];
+      var rawItems = [];
+
+      var gridEl  = document.getElementById("grid");
+      var countEl = document.getElementById("result-count");
+      var filterEl = document.getElementById("filter-input");
+      var sortEl   = document.getElementById("sort-select");
+
+      function hrefFor(item) {
+        return kind === "article"
+          ? "/a/" + item.slug
+          : "/r/" + item.slug;
+      }
+
+      function renderCard(item) {
+        var photo = item.image_url
+          ? '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title) + '" loading="lazy" />'
+          : '<span class="browse-card-photo-empty">No photo</span>';
+        var summary = item.summary || item.verdict || "";
+        var rating = (kind !== "article" && item.rating) ? stars(item.rating) : "";
+        var kindLabel = kind === "article" ? "Article" : kind === "course" ? "Course review" : "Equipment review";
+
+        return ''
+          + '<a class="browse-card" href="' + hrefFor(item) + '">'
+          +   '<div class="browse-card-photo">' + photo + '</div>'
+          +   '<div class="browse-card-body">'
+          +     '<span class="browse-card-kind ' + kind + '">' + kindLabel + '</span>'
+          +     '<h2 class="browse-card-title">' + esc(item.title) + '</h2>'
+          +     (summary ? '<p class="browse-card-summary">' + esc(summary) + '</p>' : '')
+          +     '<div class="browse-card-meta">'
+          +       '<span class="browse-card-author">' + esc(item.author_name || "Community") + '</span>'
+          +       (rating || '<span>' + fmtDate(item.updated_at) + '</span>')
+          +     '</div>'
+          +   '</div>'
+          + '</a>';
+      }
+
+      function renderEmpty() {
+        gridEl.innerHTML =
+          '<div class="empty-state">'
+          + '<h3>' + esc(meta.empty) + '</h3>'
+          + '<p>Nothing to show. Kick it off and others will follow.</p>'
+          + '<a class="cta" href="' + meta.ctaPath + '">' + esc(meta.cta) + '</a>'
+          + '</div>';
+        countEl.textContent = '0 entries';
+      }
+
+      function applyFilterAndSort() {
+        var q = (filterEl.value || "").trim().toLowerCase();
+        var sort = sortEl.value;
+        var filtered = rawItems.filter(function (it) {
+          if (!q) return true;
+          return (
+            (it.title || "").toLowerCase().includes(q) ||
+            (it.author_name || "").toLowerCase().includes(q) ||
+            (it.summary || "").toLowerCase().includes(q) ||
+            (it.verdict || "").toLowerCase().includes(q)
+          );
+        });
+        filtered.sort(function (a, b) {
+          if (sort === "newest")  return String(b.updated_at).localeCompare(String(a.updated_at));
+          if (sort === "oldest")  return String(a.updated_at).localeCompare(String(b.updated_at));
+          if (sort === "title")   return (a.title || "").localeCompare(b.title || "");
+          if (sort === "rating")  return (Number(b.rating) || 0) - (Number(a.rating) || 0);
+          return 0;
+        });
+
+        if (filtered.length === 0) {
+          if (rawItems.length === 0) {
+            renderEmpty();
+          } else {
+            gridEl.innerHTML =
+              '<div class="empty-state"><h3>No matches for "' + esc(q) + '"</h3><p>Try a different term.</p></div>';
+            countEl.textContent = '0 of ' + rawItems.length;
+          }
+          return;
+        }
+        gridEl.innerHTML = filtered.map(renderCard).join('');
+        countEl.textContent = filtered.length === rawItems.length
+          ? rawItems.length + (rawItems.length === 1 ? ' entry' : ' entries')
+          : filtered.length + ' of ' + rawItems.length;
+      }
+
+      // Hide the rating option for articles (they don't have ratings)
+      if (kind === "article") {
+        var opt = sortEl.querySelector('option[value="rating"]');
+        if (opt) opt.remove();
+      }
+
+      filterEl.addEventListener('input', applyFilterAndSort);
+      sortEl.addEventListener('change', applyFilterAndSort);
+
+      // Fetch the index — then hydrate each item's summary/image from /api/get
+      // (but only lazily, for items that become visible). To keep it simple
+      // and correct now, we just use the index data — summary/image are in the
+      // per-record file, not the index, so we'll fetch per-item lightly.
+      fetch('/api/list?kind=' + kind)
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (data) {
+          rawItems = (data && Array.isArray(data.items)) ? data.items.slice() : [];
+          if (rawItems.length === 0) {
+            renderEmpty();
+            return;
+          }
+          // Kick off a hydration fetch for each item to get its summary/verdict/image
+          // — lightweight, cached by the /api/get handler (Cache-Control max-age 30).
+          // We render immediately with whatever the index has, then patch as fetches return.
+          applyFilterAndSort();
+
+          Promise.all(rawItems.map(function (it, idx) {
+            return fetch('/api/get?kind=' + kind + '&slug=' + encodeURIComponent(it.slug))
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (rec) {
+                if (!rec) return;
+                // Merge richer fields into rawItems[idx]
+                rawItems[idx] = Object.assign({}, it, {
+                  summary:   rec.summary   || "",
+                  verdict:   rec.verdict   || "",
+                  image_url: rec.image_url || "",
+                  rating:    rec.rating != null ? rec.rating : it.rating,
+                });
+              })
+              .catch(function () {});
+          })).then(applyFilterAndSort);
+        })
+        .catch(function (err) {
+          gridEl.innerHTML =
+            '<div class="empty-state"><h3>Could not load</h3><p>' + esc(err.message) + '</p></div>';
+          countEl.textContent = 'Error';
+        });
+    })();
+  </script>
+</body>
+</html>
