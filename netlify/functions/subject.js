@@ -45,10 +45,12 @@ async function gatherBySlugFallback(store, kind, subjectSlug) {
       : null;
   // Pick newest title as display title
   live.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+  const firstWithImage = live.find((r) => r.image_url) || null;
   return {
     kind,
     subject_slug: subjectSlug,
     display_title: live[0].title,
+    image_url: firstWithImage ? firstWithImage.image_url : "",
     avg_rating: avg,
     review_count: live.length,
     updated_at: live[0].updated_at,

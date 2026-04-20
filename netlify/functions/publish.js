@@ -163,6 +163,16 @@ export default async (req, context) => {
           model: typeof payload.model === "string" ? payload.model.slice(0, 100) : "",
           category: typeof payload.category === "string" ? payload.category.slice(0, 60) : "",
           duration_used: typeof payload.duration_used === "string" ? payload.duration_used.slice(0, 200) : "",
+          // Hero image. Two forms accepted:
+          //  - data:image/... URI (small; stored inline; ≤ 400 KB after base64)
+          //  - https://... URL (stored as-is)
+          image_url: (() => {
+            const v = typeof payload.image_url === "string" ? payload.image_url.trim() : "";
+            if (!v) return "";
+            if (v.startsWith("data:image/") && v.length <= 400 * 1024) return v;
+            if (/^https:\/\/[^\s]+$/.test(v) && v.length <= 500) return v;
+            return "";
+          })(),
         }),
   };
 
@@ -192,8 +202,14 @@ export default async (req, context) => {
       kind,
       subject_slug: subjectSlug,
       display_title: record.title,
+      image_url: "",
       reviews: [],
     };
+    // First submitter sets the canonical photo; later reviewers only replace
+    // it if the subject didn't have one yet.
+    if (!subject.image_url && record.image_url) {
+      subject.image_url = record.image_url;
+    }
     // Upsert this author's review in the subject's list
     const i = subject.reviews.findIndex((r) => r.author_id === user.sub);
     const reviewSummary = {
@@ -203,6 +219,7 @@ export default async (req, context) => {
       rating: record.rating,
       verdict: record.verdict,
       updated_at: record.updated_at,
+      image_url: record.image_url || "",
     };
     if (i >= 0) subject.reviews[i] = reviewSummary;
     else subject.reviews.unshift(reviewSummary);

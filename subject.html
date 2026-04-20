@@ -26,6 +26,35 @@
       box-shadow: var(--shadow-sm);
       padding: var(--s6);
       margin: var(--s4) 0 var(--s6);
+      overflow: hidden;
+    }
+    .subject-photo {
+      margin: calc(-1 * var(--s6)) calc(-1 * var(--s6)) var(--s5);
+      aspect-ratio: 16 / 9;
+      background: #f0ece7;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--divider);
+    }
+    .subject-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .subject-photo-placeholder {
+      color: var(--ink-faint);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      text-align: center;
+      padding: var(--s4);
+    }
+    .subject-photo-placeholder svg {
+      display: block;
+      margin: 0 auto var(--s2);
+      opacity: 0.4;
     }
     .subject-kind-tag {
       display: inline-block;
@@ -499,6 +528,17 @@
           '</nav>' +
 
           '<section class="subject-hero">' +
+            (data.image_url
+              ? '<div class="subject-photo"><img src="' + esc(data.image_url) + '" alt="' + esc(data.display_title) + '" loading="eager" /></div>'
+              : '<div class="subject-photo"><div class="subject-photo-placeholder">' +
+                  '<svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
+                    '<rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/>' +
+                    '<circle cx="16" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/>' +
+                    '<path d="M6 32l10-10 12 12 8-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                  '</svg>' +
+                  'No photo yet. Add one when you review.' +
+                '</div></div>'
+            ) +
             '<span class="subject-kind-tag ' + kind + '">' + kindLabel + '</span>' +
             '<h1>' + esc(data.display_title) + '</h1>' +
             '<div class="subject-hero-meta">' +

@@ -139,6 +139,9 @@
 
             // Hero card
             '<div class="review-hero-card anim-fade-up">' +
+              (r.image_url
+                ? '<div class="review-hero-photo"><img src="' + esc(r.image_url) + '" alt="' + esc(r.title) + '" loading="eager" /></div>'
+                : '') +
               '<div class="review-hero-head">' +
                 '<div style="min-width:0;">' +
                   '<span class="kind-badge ' + kind + '" style="display:inline-block;margin-bottom:10px;font-family:var(--font-ui);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;">' +

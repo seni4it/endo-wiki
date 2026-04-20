@@ -99,6 +99,8 @@
     $("#course-fields").style.display = k === "course" ? "block" : "none";
     $("#equipment-fields").style.display = k === "equipment" ? "block" : "none";
     $("#article-fields").style.display = k === "article" ? "block" : "none";
+    const rowPhoto = $("#row-photo");
+    if (rowPhoto) rowPhoto.style.display = k === "article" ? "none" : "block";
     $("#title").placeholder =
       k === "article"
         ? "e.g. 'Managing calcified canals'"
@@ -157,6 +159,64 @@
   }
   const prosList = buildList("pros-input", "Something you liked");
   const consList = buildList("cons-input", "Something you didn't like");
+
+  // ---------- Product/course photo ----------
+  let imageDataUrl = ""; // populated from file upload
+  function showPreview(src) {
+    if (!src) {
+      $("#image-preview").style.display = "none";
+      return;
+    }
+    $("#image-preview-img").src = src;
+    $("#image-preview").style.display = "block";
+  }
+  function setPhotoFromFile(file) {
+    const MAX = 400 * 1024;
+    if (file.size > MAX) {
+      alert(
+        "That image is " + Math.round(file.size / 1024) + " KB — please compress to under 400 KB " +
+        "(try tinypng.com for free) or paste a URL instead."
+      );
+      $("#image-file").value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imageDataUrl = e.target.result;
+      $("#image-url").value = "";
+      showPreview(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+  const fileInput = $("#image-file");
+  const urlInput = $("#image-url");
+  const clearBtn = $("#image-clear");
+  if (fileInput) fileInput.addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) setPhotoFromFile(file);
+  });
+  if (urlInput) urlInput.addEventListener("input", (e) => {
+    const v = e.target.value.trim();
+    if (v && /^https:\/\//.test(v)) {
+      imageDataUrl = "";
+      if (fileInput) fileInput.value = "";
+      showPreview(v);
+    } else if (!v) {
+      showPreview("");
+    }
+  });
+  if (clearBtn) clearBtn.addEventListener("click", () => {
+    imageDataUrl = "";
+    if (fileInput) fileInput.value = "";
+    if (urlInput) urlInput.value = "";
+    showPreview("");
+  });
+  function currentImageUrl() {
+    if (imageDataUrl) return imageDataUrl;
+    const urlValue = urlInput ? urlInput.value.trim() : "";
+    if (urlValue && /^https:\/\//.test(urlValue)) return urlValue;
+    return "";
+  }
 
   // ---------- Netlify Identity ----------
   const identity = window.netlifyIdentity;
@@ -226,6 +286,8 @@
     const base = { kind, title, body };
     let payload;
     if (kind !== "article" && prefillSubjectSlug) base.subject_slug = prefillSubjectSlug;
+    // Attach the product/course photo if the reviewer added one
+    if (kind !== "article") base.image_url = currentImageUrl();
     if (kind === "course") {
       payload = {
         ...base,

@@ -1865,3 +1865,21 @@ select {
   .site-nav .nav-search { display: none; }  /* collapse on phones */
   .nav-search-mobile-link { display: block; } /* use the mobile dropdown link */
 }
+
+/* ─── Review hero photo ───────────────────────────────────────────── */
+.review-hero-photo {
+  margin: calc(-1 * var(--s6)) calc(-1 * var(--s6)) var(--s5);
+  aspect-ratio: 16 / 9;
+  background: #f0ece7;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--divider);
+}
+.review-hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}

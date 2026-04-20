@@ -152,7 +152,21 @@
         </div>
 
         <!-- Review-only fields -->
-        <div id="review-fields">
+        <!-- Product / course photo — only for reviews -->
+      <div class="row" id="row-photo" style="display:none;">
+        <label for="image-file">Photo of the product or course <span style="color:var(--ink-faint);font-weight:normal;">(optional)</span></label>
+        <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+          <input type="file" id="image-file" accept="image/jpeg,image/png,image/webp,image/gif" style="flex:1;min-width:200px;padding:9px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-ui);font-size:13px;background:white;" />
+          <input type="url" id="image-url" placeholder="…or paste an image URL" style="flex:1;min-width:200px;" />
+        </div>
+        <p class="hint">This photo becomes the cover image for the product/course. Max 400 KB — larger files get auto-rejected with tips. If multiple people review the same thing, the first photo uploaded becomes the canonical one.</p>
+        <div id="image-preview" style="margin-top:var(--s3);display:none;">
+          <img id="image-preview-img" alt="Preview" style="max-width:240px;max-height:160px;border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-xs);object-fit:contain;background:white;" />
+          <button type="button" id="image-clear" style="margin-left:var(--s3);padding:6px 12px;background:transparent;border:1px solid var(--border);color:var(--ink-muted);border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-ui);font-size:12px;">Remove</button>
+        </div>
+      </div>
+
+      <div id="review-fields">
 
           <!-- Stars -->
           <div class="form-row">
