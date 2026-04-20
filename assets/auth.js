@@ -105,6 +105,26 @@
     id.init();
   }
 
+  // ─── Inject search link into nav ─────────────────────────────────
+  function initSearchLink() {
+    const navLinks = document.querySelector(".site-nav .nav-links");
+    if (!navLinks) return;
+    if (navLinks.querySelector('a[href="search.html"]')) return; // already present
+    const onSearchPage = /\bsearch\.html/.test(location.pathname);
+    const link = document.createElement("a");
+    link.href = "search.html";
+    link.setAttribute("aria-label", "Search the wiki");
+    link.style.cssText = "display:inline-flex;align-items:center;gap:6px;";
+    link.innerHTML =
+      '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+      '<circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>' +
+      '<path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<span>Search</span>';
+    if (onSearchPage) link.setAttribute("aria-current", "page");
+    navLinks.appendChild(link);
+  }
+
   // ─── Mobile nav hamburger ─────────────────────────────────────────
   // Injects a toggle button that shows the hidden .nav-links as a dropdown
   // on narrow viewports. QA found that <640px the nav links vanish with no
@@ -143,9 +163,10 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => { init(); initMobileNav(); });
+    document.addEventListener("DOMContentLoaded", () => { init(); initSearchLink(); initMobileNav(); });
   } else {
     init();
+    initSearchLink();
     initMobileNav();
   }
 })();
