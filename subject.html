@@ -10,192 +10,215 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   <script src="assets/auth.js" defer></script>
   <style>
-    /* Subject page — layout tokens only. All visual styling lives in styles.css
-       via semantic class names so the system stays coherent. */
-    .subject-page {
-      max-width: 760px;
+    /* Subject page — reuses the home page's design system wherever possible.
+       Only additions here are the photo+title layout inside the hero and the
+       score block + review cards, all stacked in the same column width as
+       home-main. */
+
+    /* Hero variant: two-column photo + title block, matches home-hero gradient */
+    .subject-hero {
+      background:
+        radial-gradient(1200px 600px at 70% -10%, rgba(139,43,43,0.18), transparent 55%),
+        linear-gradient(180deg, #11182a 0%, #1a2438 100%);
+      color: #f5f3ee;
+      border-bottom: 3px solid var(--oxblood);
+      padding: var(--s8) var(--s5);
+      position: relative;
+      overflow: hidden;
+    }
+    .subject-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.08), transparent),
+        radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.06), transparent);
+      pointer-events: none;
+    }
+    .subject-hero-inner {
+      max-width: 1040px;
       margin: 0 auto;
-      padding: var(--s6) var(--s5) var(--s10);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: var(--s7);
+      align-items: center;
+      position: relative;
+    }
+    @media (max-width: 820px) {
+      .subject-hero-inner { grid-template-columns: 1fr; gap: var(--s5); }
     }
 
-    /* Hero ─────────────────────────────────────────── */
-    .subject-hero {
-      background: #ffffff;
-      border: 1px solid var(--border);
+    .subject-hero-photo {
+      aspect-ratio: 4 / 3;
       border-radius: var(--r-lg);
-      box-shadow: var(--shadow-sm);
-      padding: var(--s6);
-      margin: var(--s4) 0 var(--s6);
       overflow: hidden;
-    }
-    .subject-photo {
-      margin: calc(-1 * var(--s6)) calc(-1 * var(--s6)) var(--s5);
-      aspect-ratio: 16 / 9;
-      background: #f0ece7;
-      overflow: hidden;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom: 1px solid var(--divider);
     }
-    .subject-photo img {
+    .subject-hero-photo img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       display: block;
     }
-    .subject-photo-placeholder {
-      color: var(--ink-faint);
+    .subject-hero-photo-empty {
+      color: rgba(245,243,238,0.4);
       font-family: var(--font-ui);
       font-size: 13px;
       text-align: center;
-      padding: var(--s4);
+      padding: var(--s5);
     }
-    .subject-photo-placeholder svg {
+    .subject-hero-photo-empty svg {
       display: block;
       margin: 0 auto var(--s2);
-      opacity: 0.4;
+      opacity: 0.5;
     }
-    .subject-kind-tag {
+
+    .subject-hero-title-block { min-width: 0; }
+
+    .subject-kicker {
       display: inline-block;
       font-family: var(--font-ui);
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 999px;
+      color: rgba(245,243,238,0.62);
       margin-bottom: var(--s3);
     }
-    .subject-kind-tag.course    { background: #e6f1e9; color: #1c6b45; }
-    .subject-kind-tag.equipment { background: #f3e8d9; color: #8a5a17; }
-    .subject-hero h1 {
+    .subject-kicker .sep { color: rgba(245,243,238,0.3); margin: 0 10px; }
+
+    .subject-hero-title {
       font-family: var(--font-display);
-      font-size: 32px;
+      font-size: clamp(28px, 4vw, 42px);
       font-weight: 600;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
-      color: var(--ink);
-      margin: 0 0 var(--s2);
-    }
-    .subject-hero-meta {
-      color: var(--ink-muted);
-      font-family: var(--font-ui);
-      font-size: 13px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--s4);
+      color: #ffffff;
     }
 
-    /* Score summary ─────────────────────────────────── */
-    .score-summary {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: var(--s5);
+    .subject-score-row {
+      display: flex;
       align-items: center;
-      margin-top: var(--s5);
-      padding-top: var(--s5);
-      border-top: 1px solid var(--divider);
+      gap: var(--s5);
+      margin-bottom: var(--s4);
+      flex-wrap: wrap;
     }
-    @media (max-width: 540px) {
-      .score-summary { grid-template-columns: 1fr; gap: var(--s4); }
-    }
-    .score-big {
+    .subject-score-big {
       font-family: var(--font-display);
-      font-size: 56px;
+      font-size: 48px;
       font-weight: 700;
       line-height: 1;
-      color: var(--ink);
+      color: #ffffff;
       letter-spacing: -0.02em;
     }
-    .score-big-label {
+    .subject-score-big-label {
       font-family: var(--font-ui);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-top: 6px;
+      color: rgba(245,243,238,0.5);
+      margin-top: 4px;
     }
-    .score-stars-big {
+    .subject-score-stars {
       font-size: 22px;
-      color: #d49b1a;
+      color: #e0b64a;
       letter-spacing: 3px;
       line-height: 1;
-      margin-bottom: var(--s3);
     }
-    .score-stars-big .empty { color: #e5eaf0; }
+    .subject-score-stars .empty { color: rgba(245,243,238,0.15); }
 
-    .breakdown { display: flex; flex-direction: column; gap: 6px; }
-    .breakdown-row {
+    .subject-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-width: 360px;
+    }
+    .br-row {
       display: grid;
-      grid-template-columns: 32px 1fr 26px;
+      grid-template-columns: 28px 1fr 24px;
       align-items: center;
       gap: var(--s2);
       font-family: var(--font-ui);
       font-size: 12px;
-      color: var(--ink-faint);
+      color: rgba(245,243,238,0.58);
     }
-    .breakdown-row .bar {
-      height: 5px;
-      background: var(--divider);
-      border-radius: 3px;
+    .br-row .bar {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
       overflow: hidden;
     }
-    .breakdown-row .bar-fill {
+    .br-row .bar-fill {
       height: 100%;
-      background: #d49b1a;
-      border-radius: 3px;
-      transition: width 0.4s ease;
+      background: #e0b64a;
+      border-radius: 2px;
     }
-    .breakdown-row .count { text-align: right; font-variant-numeric: tabular-nums; }
+    .br-row .count { text-align: right; font-variant-numeric: tabular-nums; }
 
-    /* Section heading ───────────────────────────────── */
-    .section-heading {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: var(--s4);
-      margin: var(--s7) 0 var(--s4);
-      padding-bottom: var(--s2);
-      border-bottom: 1px solid var(--divider);
-    }
-    .section-heading h2 {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--ink);
-      margin: 0;
-      letter-spacing: -0.01em;
-    }
-    .section-heading .count-pill {
+    .subject-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      background: var(--oxblood);
+      color: #ffffff;
+      border-radius: var(--r-sm);
+      text-decoration: none;
       font-family: var(--font-ui);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-faint);
+      font-size: 13px;
+      font-weight: 700;
       letter-spacing: 0.04em;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: var(--s2);
+    }
+    .subject-hero-cta:hover { background: #9a3333; transform: translateY(-1px); }
+
+    /* Main body — same column width + padding rhythm as home-main */
+    .subject-main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: var(--s8) var(--s5) var(--s6);
     }
 
-    /* Single review card ────────────────────────────── */
-    .review-list { display: flex; flex-direction: column; gap: var(--s5); }
+    /* Individual review cards — echo review-card-sm on home */
+    .review-list {
+      display: grid;
+      gap: var(--s4);
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
     .single-review {
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--r-md);
       padding: var(--s5) var(--s6);
       box-shadow: var(--shadow-xs);
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .single-review:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-dk);
     }
     .review-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: var(--s4);
-      flex-wrap: wrap;
+      gap: var(--s3);
       margin-bottom: var(--s3);
     }
     .review-author {
       font-family: var(--font-ui);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--ink);
-      line-height: 1.2;
+      line-height: 1.3;
     }
     .review-date {
       font-family: var(--font-ui);
@@ -204,195 +227,124 @@
       margin-top: 2px;
     }
     .review-stars {
-      font-size: 16px;
+      font-size: 15px;
       color: #d49b1a;
       letter-spacing: 2px;
       line-height: 1;
       white-space: nowrap;
     }
     .review-stars .empty { color: #e5eaf0; }
+
     .review-verdict {
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 16px;
       line-height: 1.5;
       color: var(--ink);
       font-style: italic;
-      padding: var(--s3) 0 var(--s3) var(--s4);
+      padding: 0 0 0 var(--s3);
       border-left: 3px solid var(--oxblood);
-      margin: var(--s4) 0;
+      margin: var(--s3) 0;
     }
+
     .review-proscons {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--s4);
-      margin: var(--s4) 0;
+      gap: var(--s3);
+      margin: var(--s3) 0;
     }
-    @media (max-width: 560px) { .review-proscons { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .review-proscons { grid-template-columns: 1fr; } }
     .review-proscons h4 {
       font-family: var(--font-ui);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin: 0 0 var(--s2);
+      margin: 0 0 var(--s1);
     }
     .review-proscons .pros h4 { color: #1c6b45; }
     .review-proscons .cons h4 { color: #9c2b17; }
     .review-proscons ul {
       margin: 0;
-      padding-left: 18px;
+      padding-left: 16px;
       font-family: var(--font-body);
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.55;
       color: var(--ink-muted);
     }
-    .review-proscons li { margin: 4px 0; }
+    .review-proscons li { margin: 3px 0; }
 
-    /* Review body (rendered by Toast UI) ─────────────── */
     .review-body-wrap {
       border-top: 1px solid var(--divider);
-      margin-top: var(--s4);
-      padding-top: var(--s4);
+      margin-top: var(--s3);
+      padding-top: var(--s3);
     }
     .review-body-label {
       font-family: var(--font-ui);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--ink-faint);
       display: block;
-      margin-bottom: var(--s3);
+      margin-bottom: var(--s2);
     }
     .review-body-host {
       font-family: var(--font-body);
-      font-size: 15.5px;
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.65;
       color: var(--ink);
     }
-    /* Scope Toast UI viewer output so the in-body markdown
-       (## and ### headings) renders at a sane scale. */
+    /* Tame Toast UI viewer so in-review H2/H3 render as card sub-headings */
     .review-body-host .toastui-editor-contents,
     .review-body-host .toastui-editor-contents * {
       font-family: var(--font-body) !important;
+      background: transparent !important;
     }
-    .review-body-host .toastui-editor-contents h1 {
-      font-family: var(--font-display) !important;
-      font-size: 18px !important;
-      font-weight: 600 !important;
-      margin: var(--s4) 0 var(--s2) !important;
-      color: var(--ink) !important;
-      border: none !important;
-      padding: 0 !important;
-      letter-spacing: -0.01em !important;
-    }
+    .review-body-host .toastui-editor-contents { padding: 0 !important; }
+    .review-body-host .toastui-editor-contents h1,
     .review-body-host .toastui-editor-contents h2 {
-      font-family: var(--font-display) !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
-      margin: var(--s4) 0 var(--s1) !important;
-      color: var(--ink) !important;
-      border: none !important;
-      padding: 0 !important;
-      letter-spacing: -0.01em !important;
-    }
-    .review-body-host .toastui-editor-contents h3 {
       font-family: var(--font-display) !important;
       font-size: 15px !important;
       font-weight: 600 !important;
       margin: var(--s3) 0 var(--s1) !important;
-      color: var(--ink) !important;
+      padding: 0 !important;
       border: none !important;
+      color: var(--ink) !important;
+      letter-spacing: -0.01em !important;
+    }
+    .review-body-host .toastui-editor-contents h3 {
+      font-family: var(--font-display) !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      margin: var(--s2) 0 var(--s1) !important;
+      padding: 0 !important;
+      border: none !important;
+      color: var(--ink) !important;
     }
     .review-body-host .toastui-editor-contents p {
       margin: var(--s2) 0 !important;
-      font-size: 15.5px !important;
-      line-height: 1.7 !important;
+      font-size: 14.5px !important;
+      line-height: 1.65 !important;
       color: var(--ink) !important;
     }
     .review-body-host .toastui-editor-contents ul,
     .review-body-host .toastui-editor-contents ol {
       margin: var(--s2) 0 !important;
-      padding-left: 20px !important;
+      padding-left: 18px !important;
     }
     .review-body-host .toastui-editor-contents li {
-      font-size: 15px !important;
-      line-height: 1.6 !important;
-      color: var(--ink) !important;
-    }
-    .review-body-host .toastui-editor-contents em {
-      color: var(--ink-muted) !important;
-    }
-    .review-body-host .toastui-editor-contents strong {
-      color: var(--ink) !important;
-      font-weight: 700 !important;
-    }
-    .review-body-host .toastui-editor-contents blockquote {
-      border-left: 3px solid var(--border-dk) !important;
-      margin: var(--s3) 0 !important;
-      padding: var(--s2) var(--s4) !important;
-      color: var(--ink-muted) !important;
-      background: transparent !important;
-      font-style: italic !important;
-    }
-    .review-body-host .toastui-editor-contents code {
-      background: var(--divider) !important;
-      padding: 1px 6px !important;
-      border-radius: 3px !important;
       font-size: 14px !important;
+      line-height: 1.55 !important;
     }
+    .review-body-host .toastui-editor-contents em { color: var(--ink-muted) !important; }
+    .review-body-host .toastui-editor-contents strong { color: var(--ink) !important; }
     .review-body-host .toastui-editor-contents img {
       max-width: 100% !important;
       border-radius: var(--r-sm) !important;
-      margin: var(--s3) 0 !important;
-    }
-    /* Remove any borders/chrome Toast UI might add */
-    .review-body-host .toastui-editor-contents {
-      padding: 0 !important;
-      background: transparent !important;
+      margin: var(--s2) 0 !important;
     }
 
-    /* CTA band ─────────────────────────────────────── */
-    .add-review-cta {
-      margin-top: var(--s7);
-      padding: var(--s6) var(--s6);
-      background: var(--ink);
-      color: #ffffff;
-      border-radius: var(--r-lg);
-      text-align: center;
-    }
-    .add-review-cta h3 {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 600;
-      margin: 0 0 var(--s2);
-      color: #ffffff;
-      letter-spacing: -0.01em;
-    }
-    .add-review-cta p {
-      font-family: var(--font-ui);
-      font-size: 14px;
-      color: rgba(255,255,255,0.72);
-      margin: 0 0 var(--s4);
-      max-width: 420px;
-      margin-inline: auto;
-    }
-    .add-review-cta a {
-      display: inline-block;
-      padding: 12px 24px;
-      background: var(--oxblood);
-      color: #ffffff;
-      text-decoration: none;
-      font-family: var(--font-ui);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      border-radius: var(--r-sm);
-      transition: background 0.15s;
-    }
-    .add-review-cta a:hover { background: #7a2323; }
-
-    .loading, .error-state {
+    .error-state {
       text-align: center;
       padding: var(--s9) var(--s5);
       color: var(--ink-muted);
@@ -400,7 +352,7 @@
     }
     .error-state h1 {
       font-family: var(--font-display);
-      font-size: 24px;
+      font-size: 26px;
       color: var(--ink);
       margin: 0 0 var(--s3);
     }
@@ -428,8 +380,8 @@
     </div>
   </nav>
 
-  <main class="subject-page" id="main">
-    <div class="loading">Loading…</div>
+  <main id="main">
+    <div style="text-align:center; padding: var(--s9); color: var(--ink-muted); font-family: var(--font-ui);">Loading…</div>
   </main>
 
   <footer class="site-footer">
@@ -437,9 +389,10 @@
       <div>
         <div class="footer-brand">EndoWiki</div>
         <p class="footer-mission">
-          A community knowledge base for endodontists.
-          Content is licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
-          and is for educational purposes only.
+          A community knowledge base for endodontists. Content is written and reviewed
+          by practising specialists. Articles are released under
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+          Content is for educational purposes only and does not constitute clinical advice.
         </p>
       </div>
       <div class="footer-links">
@@ -467,14 +420,13 @@
       const d = new Date(iso);
       return d.toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
     }
-    function stars(n, cls){
+    function starRow(n, cls){
       const r = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
-      const c = cls || "score-stars-big";
+      const c = cls || "review-stars";
       return '<span class="' + c + '">' + "★".repeat(r) + '<span class="empty">' + "☆".repeat(5 - r) + '</span></span>';
     }
-    function reviewStars(n){ return stars(n, "review-stars"); }
     function breakdown(reviews){
-      const buckets = [0,0,0,0,0]; // index 0 = 5★, index 4 = 1★
+      const buckets = [0,0,0,0,0];
       reviews.forEach(r => {
         const v = Math.round(Number(r.rating) || 0);
         if (v >= 1 && v <= 5) buckets[5 - v]++;
@@ -483,7 +435,7 @@
       return [5,4,3,2,1].map((score, i) => {
         const count = buckets[i];
         const pct = Math.round((count / total) * 100);
-        return '<div class="breakdown-row">' +
+        return '<div class="br-row">' +
           '<span>' + score + '★</span>' +
           '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
           '<span class="count">' + count + '</span>' +
@@ -517,63 +469,60 @@
 
         const kindLabel = kind === 'course' ? 'Course' : 'Equipment';
         const plural = data.review_count === 1 ? 'review' : 'reviews';
+        const avgText = data.avg_rating != null ? data.avg_rating.toFixed(1) : '—';
+
+        const photoMarkup = data.image_url
+          ? '<img src="' + esc(data.image_url) + '" alt="' + esc(data.display_title) + '" loading="eager" />'
+          : '<div class="subject-hero-photo-empty">' +
+              '<svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
+                '<rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/>' +
+                '<circle cx="16" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/>' +
+                '<path d="M6 32l10-10 12 12 8-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+              '</svg>' +
+              'No photo yet. Add one when you review.' +
+            '</div>';
 
         mainEl.innerHTML =
-          '<nav class="breadcrumb" aria-label="Breadcrumb">' +
-            '<a href="/">EndoWiki</a>' +
-            '<span class="sep" aria-hidden="true">›</span>' +
-            '<a href="/#' + (kind === 'course' ? 'courses' : 'equipment') + '">' + kindLabel + ' reviews</a>' +
-            '<span class="sep" aria-hidden="true">›</span>' +
-            '<span aria-current="page">' + esc(data.display_title) + '</span>' +
-          '</nav>' +
-
-          '<section class="subject-hero">' +
-            (data.image_url
-              ? '<div class="subject-photo"><img src="' + esc(data.image_url) + '" alt="' + esc(data.display_title) + '" loading="eager" /></div>'
-              : '<div class="subject-photo"><div class="subject-photo-placeholder">' +
-                  '<svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
-                    '<rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/>' +
-                    '<circle cx="16" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/>' +
-                    '<path d="M6 32l10-10 12 12 8-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-                  '</svg>' +
-                  'No photo yet. Add one when you review.' +
-                '</div></div>'
-            ) +
-            '<span class="subject-kind-tag ' + kind + '">' + kindLabel + '</span>' +
-            '<h1>' + esc(data.display_title) + '</h1>' +
-            '<div class="subject-hero-meta">' +
-              data.review_count + ' ' + plural +
-              (data.updated_at ? ' · Updated ' + fmtDate(data.updated_at) : '') +
-            '</div>' +
-
-            '<div class="score-summary">' +
-              '<div>' +
-                '<div class="score-big">' + (data.avg_rating != null ? data.avg_rating.toFixed(1) : '—') + '</div>' +
-                '<div class="score-big-label">Avg of ' + data.review_count + '</div>' +
-              '</div>' +
-              '<div>' +
-                stars(data.avg_rating) +
-                '<div class="breakdown">' + breakdown(data.reviews || []) + '</div>' +
+          '<header class="subject-hero anim-fade-up" role="banner">' +
+            '<div class="subject-hero-inner">' +
+              '<div class="subject-hero-photo">' + photoMarkup + '</div>' +
+              '<div class="subject-hero-title-block">' +
+                '<div class="subject-kicker">' +
+                  '<span><a href="/" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(245,243,238,0.3);">EndoWiki</a></span>' +
+                  '<span class="sep">›</span>' +
+                  '<span><a href="/#' + (kind === 'course' ? 'courses' : 'equipment') + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(245,243,238,0.3);">' + kindLabel + ' reviews</a></span>' +
+                '</div>' +
+                '<h1 class="subject-hero-title">' + esc(data.display_title) + '</h1>' +
+                '<div class="subject-score-row">' +
+                  '<div>' +
+                    '<div class="subject-score-big">' + avgText + '</div>' +
+                    '<div class="subject-score-big-label">Avg of ' + data.review_count + '</div>' +
+                  '</div>' +
+                  '<div>' +
+                    starRow(data.avg_rating, 'subject-score-stars') +
+                    '<div class="subject-breakdown" style="margin-top:12px;">' + breakdown(data.reviews || []) + '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<a class="subject-hero-cta" href="compose.html?kind=' + esc(kind) +
+                  '&subject_slug=' + encodeURIComponent(subjectSlug) +
+                  '&title=' + encodeURIComponent(data.display_title) + '">' +
+                  '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 2l2 2-9 9H3v-2l9-9z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>' +
+                  'Add your review' +
+                '</a>' +
               '</div>' +
             '</div>' +
-          '</section>' +
+          '</header>' +
 
-          '<div class="section-heading">' +
-            '<h2>All reviews</h2>' +
-            '<span class="count-pill">' + data.review_count + ' total</span>' +
-          '</div>' +
-
-          '<div class="review-list" id="review-list"></div>' +
-
-          '<section class="add-review-cta">' +
-            '<h3>Own this ' + (kind === 'course' ? 'course experience' : 'piece of equipment') + '?</h3>' +
-            '<p>Add your review alongside the others. More takes make better decisions.</p>' +
-            '<a href="compose.html?kind=' + esc(kind) +
-              '&subject_slug=' + encodeURIComponent(subjectSlug) +
-              '&title=' + encodeURIComponent(data.display_title) + '">' +
-              '+ Add your review' +
-            '</a>' +
-          '</section>';
+          '<div class="subject-main">' +
+            '<div class="section-header">' +
+              '<h2>All reviews</h2>' +
+              '<span class="section-kicker">' + data.review_count + ' ' + plural + '</span>' +
+              '<a class="section-more" href="compose.html?kind=' + esc(kind) +
+                '&subject_slug=' + encodeURIComponent(subjectSlug) +
+                '&title=' + encodeURIComponent(data.display_title) + '">Add yours →</a>' +
+            '</div>' +
+            '<div class="review-list" id="review-list"></div>' +
+          '</div>';
 
         const listEl = document.getElementById('review-list');
         (data.reviews || []).forEach(r => {
@@ -589,7 +538,7 @@
                 '<div class="review-author">' + esc(r.author_name || 'Anonymous') + '</div>' +
                 '<div class="review-date">' + fmtDate(r.updated_at) + '</div>' +
               '</div>' +
-              reviewStars(r.rating) +
+              starRow(r.rating, 'review-stars') +
             '</header>' +
             (r.verdict ? '<div class="review-verdict">' + esc(r.verdict) + '</div>' : '') +
             ((pros || cons) ? '<div class="review-proscons">' +
@@ -616,19 +565,16 @@
       } catch (err) {
         document.title = 'Not found — EndoWiki';
         mainEl.innerHTML =
-          '<nav class="breadcrumb" aria-label="Breadcrumb">' +
-            '<a href="/">EndoWiki</a>' +
-            '<span class="sep" aria-hidden="true">›</span>' +
-            '<span aria-current="page">Reviews</span>' +
-          '</nav>' +
-          '<div class="error-state">' +
-            '<h1>No reviews here yet</h1>' +
-            '<p>Be the first to review this ' + (kind === 'course' ? 'course' : 'product') + '.</p>' +
-            '<p style="margin-top:var(--s5);">' +
-              '<a href="compose.html?kind=' + esc(kind) +
-                '&subject_slug=' + encodeURIComponent(subjectSlug) +
-                '" style="color:var(--oxblood);font-weight:700;">Write the first review →</a>' +
-            '</p>' +
+          '<div class="subject-main">' +
+            '<div class="error-state">' +
+              '<h1>No reviews here yet</h1>' +
+              '<p>Be the first to review this ' + (kind === 'course' ? 'course' : 'product') + '.</p>' +
+              '<p style="margin-top:var(--s5);">' +
+                '<a href="compose.html?kind=' + esc(kind) +
+                  '&subject_slug=' + encodeURIComponent(subjectSlug) +
+                  '" style="color:var(--oxblood);font-weight:700;">Write the first review →</a>' +
+              '</p>' +
+            '</div>' +
           '</div>';
       }
     })();
