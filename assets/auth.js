@@ -105,24 +105,80 @@
     id.init();
   }
 
-  // ─── Inject search link into nav ─────────────────────────────────
-  function initSearchLink() {
-    const navLinks = document.querySelector(".site-nav .nav-links");
-    if (!navLinks) return;
-    if (navLinks.querySelector('a[href="search.html"]')) return; // already present
-    const onSearchPage = /\bsearch\.html/.test(location.pathname);
-    const link = document.createElement("a");
-    link.href = "search.html";
-    link.setAttribute("aria-label", "Search the wiki");
-    link.style.cssText = "display:inline-flex;align-items:center;gap:6px;";
-    link.innerHTML =
-      '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
-      '<circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>' +
-      '<path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
-      '</svg>' +
-      '<span>Search</span>';
-    if (onSearchPage) link.setAttribute("aria-current", "page");
-    navLinks.appendChild(link);
+  // ─── Inject a real search box into the nav ──────────────────────
+  // Wikipedia-style: always-visible search input that goes to the search page
+  // with the current query. Also injects a "Search" link into nav-links for
+  // mobile users who collapse the nav.
+  function initSearchBox() {
+    const nav = document.querySelector(".site-nav");
+    if (!nav) return;
+    const inner = nav.querySelector(".site-nav-inner");
+    const navRight = nav.querySelector(".nav-right");
+    if (!inner || !navRight) return;
+
+    // Don't double-inject
+    if (!nav.querySelector(".nav-search")) {
+      const onSearchPage = /\bsearch\.html/.test(location.pathname);
+      const initialQ = onSearchPage
+        ? new URLSearchParams(location.search).get("q") || ""
+        : "";
+
+      const form = document.createElement("form");
+      form.className = "nav-search";
+      form.setAttribute("role", "search");
+      form.action = "/search.html";
+      form.method = "get";
+      form.innerHTML =
+        '<svg class="nav-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+        '<circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>' +
+        '<path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+        '</svg>' +
+        '<input type="search" name="q" aria-label="Search EndoWiki" placeholder="Search the wiki…" autocomplete="off" />';
+      const input = form.querySelector("input");
+      input.value = initialQ;
+
+      form.addEventListener("submit", (e) => {
+        const q = (input.value || "").trim();
+        if (!q) {
+          e.preventDefault();
+          return;
+        }
+        // Let the form submit normally — action + method GET handles navigation
+      });
+      // Keyboard shortcut: "/" focuses the nav search (like GitHub, Wikipedia)
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+          const t = e.target;
+          const typing = t && (
+            t.tagName === "INPUT" ||
+            t.tagName === "TEXTAREA" ||
+            t.isContentEditable
+          );
+          if (!typing) {
+            e.preventDefault();
+            input.focus();
+            input.select();
+          }
+        }
+      });
+
+      // Insert before nav-right (so: brand — links — search — CTA)
+      inner.insertBefore(form, navRight);
+    }
+
+    // Also add a small "Search" link in nav-links for the mobile dropdown
+    const navLinks = nav.querySelector(".nav-links");
+    if (navLinks && !navLinks.querySelector('a[href="search.html"]')) {
+      const link = document.createElement("a");
+      link.href = "search.html";
+      link.className = "nav-search-mobile-link";
+      link.setAttribute("aria-label", "Open full search");
+      link.textContent = "Search";
+      if (/\bsearch\.html/.test(location.pathname)) {
+        link.setAttribute("aria-current", "page");
+      }
+      navLinks.appendChild(link);
+    }
   }
 
   // ─── Mobile nav hamburger ─────────────────────────────────────────
@@ -163,10 +219,10 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => { init(); initSearchLink(); initMobileNav(); });
+    document.addEventListener("DOMContentLoaded", () => { init(); initSearchBox(); initMobileNav(); });
   } else {
     init();
-    initSearchLink();
+    initSearchBox();
     initMobileNav();
   }
 })();

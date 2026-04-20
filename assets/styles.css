@@ -1797,3 +1797,71 @@ select {
     border-bottom: none;
   }
 }
+
+/* ─── Nav search box (Wikipedia-style) ────────────────────────────── */
+.site-nav .nav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  margin: 0 var(--s3);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  flex: 0 1 280px;
+  max-width: 320px;
+  min-width: 160px;
+}
+.site-nav .nav-search:focus-within {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.32);
+  box-shadow: 0 0 0 3px rgba(139, 43, 43, 0.28);
+}
+.site-nav .nav-search-icon {
+  color: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+}
+.site-nav .nav-search:focus-within .nav-search-icon {
+  color: rgba(255,255,255,0.92);
+}
+.site-nav .nav-search input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  padding: 7px 0;
+  width: 100%;
+}
+.site-nav .nav-search input::placeholder {
+  color: rgba(255,255,255,0.48);
+}
+.site-nav .nav-search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  height: 14px;
+  width: 14px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.site-nav .nav-search input::-webkit-search-cancel-button:hover { opacity: 1; }
+
+/* Hide the mobile-only "Search" link on desktop (box is visible) */
+.nav-search-mobile-link { display: none; }
+
+@media (max-width: 760px) {
+  .site-nav .nav-search {
+    order: 10; /* push to its own row below */
+    flex: 1 1 100%;
+    margin: var(--s2) 0 0;
+    max-width: none;
+  }
+}
+@media (max-width: 640px) {
+  .site-nav .nav-search { display: none; }  /* collapse on phones */
+  .nav-search-mobile-link { display: block; } /* use the mobile dropdown link */
+}

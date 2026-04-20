@@ -10,167 +10,380 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   <script src="assets/auth.js" defer></script>
   <style>
-    .subject-page { max-width: 820px; margin: 0 auto; padding: var(--s7) var(--s6) var(--s10); }
+    /* Subject page — layout tokens only. All visual styling lives in styles.css
+       via semantic class names so the system stays coherent. */
+    .subject-page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: var(--s6) var(--s5) var(--s10);
+    }
+
+    /* Hero ─────────────────────────────────────────── */
     .subject-hero {
-      background: white;
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--r-lg);
-      padding: var(--s7);
-      margin-bottom: var(--s6);
       box-shadow: var(--shadow-sm);
+      padding: var(--s6);
+      margin: var(--s4) 0 var(--s6);
     }
+    .subject-kind-tag {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: var(--s3);
+    }
+    .subject-kind-tag.course    { background: #e6f1e9; color: #1c6b45; }
+    .subject-kind-tag.equipment { background: #f3e8d9; color: #8a5a17; }
     .subject-hero h1 {
       font-family: var(--font-display);
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 600;
-      margin: 0 0 var(--s2);
-      letter-spacing: -0.01em;
-      color: var(--ink);
       line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin: 0 0 var(--s2);
     }
-    .subject-hero .subject-meta {
+    .subject-hero-meta {
       color: var(--ink-muted);
       font-family: var(--font-ui);
-      font-size: 14px;
-      margin-bottom: var(--s4);
+      font-size: 13px;
     }
-    .score-block {
+
+    /* Score summary ─────────────────────────────────── */
+    .score-summary {
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--s6);
+      grid-template-columns: 120px 1fr;
+      gap: var(--s5);
       align-items: center;
-      padding: var(--s5) 0 0;
+      margin-top: var(--s5);
+      padding-top: var(--s5);
       border-top: 1px solid var(--divider);
+    }
+    @media (max-width: 540px) {
+      .score-summary { grid-template-columns: 1fr; gap: var(--s4); }
     }
     .score-big {
       font-family: var(--font-display);
-      font-size: 58px;
+      font-size: 56px;
       font-weight: 700;
       line-height: 1;
       color: var(--ink);
+      letter-spacing: -0.02em;
     }
-    .score-big-sub {
+    .score-big-label {
       font-family: var(--font-ui);
-      font-size: 12px;
-      color: var(--ink-muted);
-      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: 0.08em;
-      margin-top: 4px;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 6px;
     }
-    .score-right .stars {
-      font-size: 24px;
+    .score-stars-big {
+      font-size: 22px;
       color: #d49b1a;
       letter-spacing: 3px;
+      line-height: 1;
+      margin-bottom: var(--s3);
     }
-    .score-right .stars .empty { color: #e5eaf0; }
-    .rating-breakdown { margin-top: var(--s3); }
-    .rating-row {
+    .score-stars-big .empty { color: #e5eaf0; }
+
+    .breakdown { display: flex; flex-direction: column; gap: 6px; }
+    .breakdown-row {
       display: grid;
-      grid-template-columns: 28px 1fr 36px;
+      grid-template-columns: 32px 1fr 26px;
       align-items: center;
       gap: var(--s2);
-      margin: 4px 0;
       font-family: var(--font-ui);
-      font-size: 13px;
-      color: var(--ink-muted);
+      font-size: 12px;
+      color: var(--ink-faint);
     }
-    .rating-bar {
-      height: 6px;
+    .breakdown-row .bar {
+      height: 5px;
       background: var(--divider);
       border-radius: 3px;
       overflow: hidden;
     }
-    .rating-bar-fill {
+    .breakdown-row .bar-fill {
       height: 100%;
       background: #d49b1a;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .breakdown-row .count { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Section heading ───────────────────────────────── */
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--s4);
+      margin: var(--s7) 0 var(--s4);
+      padding-bottom: var(--s2);
+      border-bottom: 1px solid var(--divider);
+    }
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .section-heading .count-pill {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-faint);
+      letter-spacing: 0.04em;
     }
 
-    .reviews-list { display: grid; gap: var(--s5); }
+    /* Single review card ────────────────────────────── */
+    .review-list { display: flex; flex-direction: column; gap: var(--s5); }
     .single-review {
-      background: white;
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--r-md);
       padding: var(--s5) var(--s6);
+      box-shadow: var(--shadow-xs);
     }
     .review-head {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s2);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--s4);
+      flex-wrap: wrap;
+      margin-bottom: var(--s3);
     }
-    .review-author { font-weight: 700; color: var(--ink); font-family: var(--font-ui); }
-    .review-author-sub { color: var(--ink-muted); font-size: 13px; font-family: var(--font-ui); }
-    .review-stars { color: #d49b1a; font-size: 18px; letter-spacing: 2px; }
+    .review-author {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .review-date {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+    .review-stars {
+      font-size: 16px;
+      color: #d49b1a;
+      letter-spacing: 2px;
+      line-height: 1;
+      white-space: nowrap;
+    }
     .review-stars .empty { color: #e5eaf0; }
     .review-verdict {
       font-family: var(--font-display);
-      font-size: 18px;
-      font-style: italic;
-      margin: var(--s3) 0;
+      font-size: 17px;
+      line-height: 1.5;
       color: var(--ink);
-      line-height: 1.4;
-    }
-    .review-proscons {
-      display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4);
+      font-style: italic;
+      padding: var(--s3) 0 var(--s3) var(--s4);
+      border-left: 3px solid var(--oxblood);
       margin: var(--s4) 0;
     }
-    @media (max-width: 600px) { .review-proscons { grid-template-columns: 1fr; } }
+    .review-proscons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s4);
+      margin: var(--s4) 0;
+    }
+    @media (max-width: 560px) { .review-proscons { grid-template-columns: 1fr; } }
     .review-proscons h4 {
       font-family: var(--font-ui);
-      font-size: 12px;
-      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      margin: 0 0 var(--s2);
     }
     .review-proscons .pros h4 { color: #1c6b45; }
     .review-proscons .cons h4 { color: #9c2b17; }
-    .review-proscons ul { margin: 0; padding-left: 20px; font-size: 15px; color: var(--ink-muted); }
-    .review-body {
+    .review-proscons ul {
+      margin: 0;
+      padding-left: 18px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-muted);
+    }
+    .review-proscons li { margin: 4px 0; }
+
+    /* Review body (rendered by Toast UI) ─────────────── */
+    .review-body-wrap {
       border-top: 1px solid var(--divider);
       margin-top: var(--s4);
       padding-top: var(--s4);
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.7;
     }
-    .review-body :first-child { margin-top: 0; }
-    .add-review-banner {
-      background: var(--ink);
-      color: white;
-      border-radius: var(--r-md);
-      padding: var(--s5) var(--s6);
+    .review-body-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      display: block;
+      margin-bottom: var(--s3);
+    }
+    .review-body-host {
+      font-family: var(--font-body);
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+    /* Scope Toast UI viewer output so the in-body markdown
+       (## and ### headings) renders at a sane scale. */
+    .review-body-host .toastui-editor-contents,
+    .review-body-host .toastui-editor-contents * {
+      font-family: var(--font-body) !important;
+    }
+    .review-body-host .toastui-editor-contents h1 {
+      font-family: var(--font-display) !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      margin: var(--s4) 0 var(--s2) !important;
+      color: var(--ink) !important;
+      border: none !important;
+      padding: 0 !important;
+      letter-spacing: -0.01em !important;
+    }
+    .review-body-host .toastui-editor-contents h2 {
+      font-family: var(--font-display) !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      margin: var(--s4) 0 var(--s1) !important;
+      color: var(--ink) !important;
+      border: none !important;
+      padding: 0 !important;
+      letter-spacing: -0.01em !important;
+    }
+    .review-body-host .toastui-editor-contents h3 {
+      font-family: var(--font-display) !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      margin: var(--s3) 0 var(--s1) !important;
+      color: var(--ink) !important;
+      border: none !important;
+    }
+    .review-body-host .toastui-editor-contents p {
+      margin: var(--s2) 0 !important;
+      font-size: 15.5px !important;
+      line-height: 1.7 !important;
+      color: var(--ink) !important;
+    }
+    .review-body-host .toastui-editor-contents ul,
+    .review-body-host .toastui-editor-contents ol {
+      margin: var(--s2) 0 !important;
+      padding-left: 20px !important;
+    }
+    .review-body-host .toastui-editor-contents li {
+      font-size: 15px !important;
+      line-height: 1.6 !important;
+      color: var(--ink) !important;
+    }
+    .review-body-host .toastui-editor-contents em {
+      color: var(--ink-muted) !important;
+    }
+    .review-body-host .toastui-editor-contents strong {
+      color: var(--ink) !important;
+      font-weight: 700 !important;
+    }
+    .review-body-host .toastui-editor-contents blockquote {
+      border-left: 3px solid var(--border-dk) !important;
+      margin: var(--s3) 0 !important;
+      padding: var(--s2) var(--s4) !important;
+      color: var(--ink-muted) !important;
+      background: transparent !important;
+      font-style: italic !important;
+    }
+    .review-body-host .toastui-editor-contents code {
+      background: var(--divider) !important;
+      padding: 1px 6px !important;
+      border-radius: 3px !important;
+      font-size: 14px !important;
+    }
+    .review-body-host .toastui-editor-contents img {
+      max-width: 100% !important;
+      border-radius: var(--r-sm) !important;
+      margin: var(--s3) 0 !important;
+    }
+    /* Remove any borders/chrome Toast UI might add */
+    .review-body-host .toastui-editor-contents {
+      padding: 0 !important;
+      background: transparent !important;
+    }
+
+    /* CTA band ─────────────────────────────────────── */
+    .add-review-cta {
       margin-top: var(--s7);
+      padding: var(--s6) var(--s6);
+      background: var(--ink);
+      color: #ffffff;
+      border-radius: var(--r-lg);
       text-align: center;
     }
-    .add-review-banner h3 {
+    .add-review-cta h3 {
       font-family: var(--font-display);
       font-size: 22px;
+      font-weight: 600;
       margin: 0 0 var(--s2);
-      color: white;
+      color: #ffffff;
+      letter-spacing: -0.01em;
     }
-    .add-review-banner p {
+    .add-review-cta p {
       font-family: var(--font-ui);
-      color: rgba(255,255,255,0.8);
-      margin: 0 0 var(--s3);
       font-size: 14px;
+      color: rgba(255,255,255,0.72);
+      margin: 0 0 var(--s4);
+      max-width: 420px;
+      margin-inline: auto;
     }
-    .add-review-banner a {
+    .add-review-cta a {
       display: inline-block;
-      padding: 12px 22px;
+      padding: 12px 24px;
       background: var(--oxblood);
-      color: white;
-      border-radius: var(--r-sm);
+      color: #ffffff;
       text-decoration: none;
       font-family: var(--font-ui);
+      font-size: 13px;
       font-weight: 700;
-      font-size: 14px;
+      letter-spacing: 0.04em;
+      border-radius: var(--r-sm);
+      transition: background 0.15s;
     }
-    .add-review-banner a:hover { background: #7a2323; }
-    .loading { text-align: center; padding: var(--s8); color: var(--ink-muted); font-family: var(--font-ui); }
+    .add-review-cta a:hover { background: #7a2323; }
+
+    .loading, .error-state {
+      text-align: center;
+      padding: var(--s9) var(--s5);
+      color: var(--ink-muted);
+      font-family: var(--font-ui);
+    }
+    .error-state h1 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--ink);
+      margin: 0 0 var(--s3);
+    }
   </style>
 </head>
 <body>
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="site-nav-inner">
-      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">E</span>EndoWiki</a>
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        EndoWiki
+      </a>
       <div class="nav-links">
         <a href="/#articles">Articles</a>
         <a href="/#courses">Courses</a>
@@ -186,91 +399,197 @@
     </div>
   </nav>
 
-  <main class="subject-page" id="main"><div class="loading">Loading…</div></main>
+  <main class="subject-page" id="main">
+    <div class="loading">Loading…</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div>
+        <div class="footer-brand">EndoWiki</div>
+        <p class="footer-mission">
+          A community knowledge base for endodontists.
+          Content is licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
+          and is for educational purposes only.
+        </p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/seni4it/endo-wiki" target="_blank" rel="noopener">GitHub</a>
+        <a href="contributing.html">How to contribute</a>
+        <a href="editorial-guidelines.html">Editorial guidelines</a>
+        <a href="compose.html">Write a new entry</a>
+      </div>
+    </div>
+    <div class="footer-base">&copy; EndoWiki contributors. All content CC BY-SA 4.0.</div>
+  </footer>
+
+  <a id="fab-compose" href="compose.html" title="Write a new entry" aria-label="Write a new entry">
+    <svg class="fab-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path d="M13.5 2.25l2.25 2.25L6 14.25H3.75V12L13.5 2.25z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    <span class="fab-label">Write a new entry</span>
+  </a>
 
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
   <script>
     function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);}
-    function fmtDate(iso){if(!iso)return"";const d=new Date(iso);return d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}
-    function stars(n,size){const r=Math.max(0,Math.min(5,Math.round(Number(n)||0)));return '<span class="stars">'+"★".repeat(r)+'<span class="empty">'+"☆".repeat(5-r)+'</span></span>';}
-    function barStars(reviews){
-      const buckets=[0,0,0,0,0];
-      reviews.forEach(r=>{const v=Math.round(Number(r.rating)||0);if(v>=1&&v<=5)buckets[5-v]++;});
-      const total=reviews.length||1;
-      return [5,4,3,2,1].map((score,i)=>{
-        const pct=Math.round((buckets[i]/total)*100);
-        return `<div class="rating-row"><span>${score}★</span><div class="rating-bar"><div class="rating-bar-fill" style="width:${pct}%"></div></div><span>${buckets[i]}</span></div>`;
+    function fmtDate(iso){
+      if(!iso) return "";
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
+    }
+    function stars(n, cls){
+      const r = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+      const c = cls || "score-stars-big";
+      return '<span class="' + c + '">' + "★".repeat(r) + '<span class="empty">' + "☆".repeat(5 - r) + '</span></span>';
+    }
+    function reviewStars(n){ return stars(n, "review-stars"); }
+    function breakdown(reviews){
+      const buckets = [0,0,0,0,0]; // index 0 = 5★, index 4 = 1★
+      reviews.forEach(r => {
+        const v = Math.round(Number(r.rating) || 0);
+        if (v >= 1 && v <= 5) buckets[5 - v]++;
+      });
+      const total = reviews.length || 1;
+      return [5,4,3,2,1].map((score, i) => {
+        const count = buckets[i];
+        const pct = Math.round((count / total) * 100);
+        return '<div class="breakdown-row">' +
+          '<span>' + score + '★</span>' +
+          '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<span class="count">' + count + '</span>' +
+        '</div>';
       }).join('');
     }
 
     (async function () {
       const u = new URL(location.href);
-      const segments = u.pathname.split('/').filter(Boolean); // /p/:kind/:slug
+      const segments = u.pathname.split('/').filter(Boolean);
       let kind, subjectSlug;
       if (segments[0] === 'p' && segments.length >= 3) {
-        kind = segments[1]; subjectSlug = segments.slice(2).join('/');
+        kind = segments[1];
+        subjectSlug = segments.slice(2).join('/');
       } else {
         kind = u.searchParams.get('kind');
         subjectSlug = u.searchParams.get('subject_slug');
       }
+      const mainEl = document.getElementById('main');
+
       if (!['course','equipment'].includes(kind) || !subjectSlug) {
-        document.getElementById('main').innerHTML = '<h1>Missing parameters</h1>';
+        mainEl.innerHTML = '<div class="error-state"><h1>Missing parameters</h1><p>This subject link is malformed.</p></div>';
         return;
       }
+
       try {
-        const res = await fetch('/api/subject?kind='+encodeURIComponent(kind)+'&subject_slug='+encodeURIComponent(subjectSlug));
-        if (!res.ok) throw new Error(res.status===404 ? 'Not found' : 'HTTP '+res.status);
+        const res = await fetch('/api/subject?kind=' + encodeURIComponent(kind) + '&subject_slug=' + encodeURIComponent(subjectSlug));
+        if (!res.ok) throw new Error(res.status === 404 ? 'Not found' : ('HTTP ' + res.status));
         const data = await res.json();
         document.title = data.display_title + ' — EndoWiki';
 
-        const main = document.getElementById('main');
-        const kindLabel = kind==='course' ? 'Course' : 'Equipment';
-        main.innerHTML =
-          '<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">EndoWiki</a><span class="sep" aria-hidden="true">›</span><a href="/#'+(kind==='course'?'courses':'equipment')+'">'+esc(kindLabel)+' reviews</a><span class="sep" aria-hidden="true">›</span><span aria-current="page">'+esc(data.display_title)+'</span></nav>'+
-          '<div class="subject-hero">'+
-            '<h1>'+esc(data.display_title)+'</h1>'+
-            '<div class="subject-meta">'+esc(kindLabel)+' · '+data.review_count+' review'+(data.review_count===1?'':'s')+' · Updated '+fmtDate(data.updated_at||data.reviews[0]?.updated_at)+'</div>'+
-            '<div class="score-block">'+
-              '<div><div class="score-big">'+(data.avg_rating!=null?data.avg_rating.toFixed(1):'—')+'</div><div class="score-big-sub">Avg of '+data.review_count+'</div></div>'+
-              '<div class="score-right">'+stars(data.avg_rating)+'<div class="rating-breakdown">'+barStars(data.reviews||[])+'</div></div>'+
-            '</div>'+
-          '</div>'+
-          '<h2 style="font-family:var(--font-display);font-size:22px;font-weight:600;margin:var(--s5) 0 var(--s4);">All reviews</h2>'+
-          '<div class="reviews-list" id="reviews-list"></div>'+
-          '<div class="add-review-banner">'+
-            '<h3>Own this '+(kind==='course'?'course experience':'piece of equipment')+'?</h3>'+
-            '<p>Add your own review. Many takes make better decisions.</p>'+
-            '<a href="compose.html?kind='+esc(kind)+'&subject_slug='+encodeURIComponent(subjectSlug)+'&title='+encodeURIComponent(data.display_title)+'">+ Add your review</a>'+
-          '</div>';
+        const kindLabel = kind === 'course' ? 'Course' : 'Equipment';
+        const plural = data.review_count === 1 ? 'review' : 'reviews';
 
-        const listEl = document.getElementById('reviews-list');
-        (data.reviews||[]).forEach(r => {
-          const wrap = document.createElement('div');
-          wrap.className = 'single-review';
-          const pros = (r.pros||[]).map(p=>'<li>'+esc(p)+'</li>').join('');
-          const cons = (r.cons||[]).map(c=>'<li>'+esc(c)+'</li>').join('');
-          wrap.innerHTML =
-            '<div class="review-head">'+
-              '<div><div class="review-author">'+esc(r.author_name)+'</div><div class="review-author-sub">'+fmtDate(r.updated_at)+'</div></div>'+
-              '<div class="review-stars">'+stars(r.rating)+'</div>'+
-            '</div>'+
-            (r.verdict ? '<div class="review-verdict">"'+esc(r.verdict)+'"</div>' : '')+
-            ((pros||cons) ? '<div class="review-proscons">'+
-              '<div class="pros"><h4>Good</h4><ul>'+(pros||'<li>—</li>')+'</ul></div>'+
-              '<div class="cons"><h4>Could be better</h4><ul>'+(cons||'<li>—</li>')+'</ul></div>'+
-            '</div>' : '')+
-            (r.body ? '<div class="review-body" id="body-'+esc(r.slug)+'"></div>' : '');
-          listEl.appendChild(wrap);
+        mainEl.innerHTML =
+          '<nav class="breadcrumb" aria-label="Breadcrumb">' +
+            '<a href="/">EndoWiki</a>' +
+            '<span class="sep" aria-hidden="true">›</span>' +
+            '<a href="/#' + (kind === 'course' ? 'courses' : 'equipment') + '">' + kindLabel + ' reviews</a>' +
+            '<span class="sep" aria-hidden="true">›</span>' +
+            '<span aria-current="page">' + esc(data.display_title) + '</span>' +
+          '</nav>' +
+
+          '<section class="subject-hero">' +
+            '<span class="subject-kind-tag ' + kind + '">' + kindLabel + '</span>' +
+            '<h1>' + esc(data.display_title) + '</h1>' +
+            '<div class="subject-hero-meta">' +
+              data.review_count + ' ' + plural +
+              (data.updated_at ? ' · Updated ' + fmtDate(data.updated_at) : '') +
+            '</div>' +
+
+            '<div class="score-summary">' +
+              '<div>' +
+                '<div class="score-big">' + (data.avg_rating != null ? data.avg_rating.toFixed(1) : '—') + '</div>' +
+                '<div class="score-big-label">Avg of ' + data.review_count + '</div>' +
+              '</div>' +
+              '<div>' +
+                stars(data.avg_rating) +
+                '<div class="breakdown">' + breakdown(data.reviews || []) + '</div>' +
+              '</div>' +
+            '</div>' +
+          '</section>' +
+
+          '<div class="section-heading">' +
+            '<h2>All reviews</h2>' +
+            '<span class="count-pill">' + data.review_count + ' total</span>' +
+          '</div>' +
+
+          '<div class="review-list" id="review-list"></div>' +
+
+          '<section class="add-review-cta">' +
+            '<h3>Own this ' + (kind === 'course' ? 'course experience' : 'piece of equipment') + '?</h3>' +
+            '<p>Add your review alongside the others. More takes make better decisions.</p>' +
+            '<a href="compose.html?kind=' + esc(kind) +
+              '&subject_slug=' + encodeURIComponent(subjectSlug) +
+              '&title=' + encodeURIComponent(data.display_title) + '">' +
+              '+ Add your review' +
+            '</a>' +
+          '</section>';
+
+        const listEl = document.getElementById('review-list');
+        (data.reviews || []).forEach(r => {
+          const card = document.createElement('article');
+          card.className = 'single-review';
+          const pros = (r.pros || []).map(p => '<li>' + esc(p) + '</li>').join('');
+          const cons = (r.cons || []).map(c => '<li>' + esc(c) + '</li>').join('');
+          const bodyId = 'body-' + r.slug.replace(/[^a-z0-9-]/gi, '-');
+
+          card.innerHTML =
+            '<header class="review-head">' +
+              '<div>' +
+                '<div class="review-author">' + esc(r.author_name || 'Anonymous') + '</div>' +
+                '<div class="review-date">' + fmtDate(r.updated_at) + '</div>' +
+              '</div>' +
+              reviewStars(r.rating) +
+            '</header>' +
+            (r.verdict ? '<div class="review-verdict">' + esc(r.verdict) + '</div>' : '') +
+            ((pros || cons) ? '<div class="review-proscons">' +
+              '<div class="pros"><h4>Good</h4><ul>' + (pros || '<li>—</li>') + '</ul></div>' +
+              '<div class="cons"><h4>Could be better</h4><ul>' + (cons || '<li>—</li>') + '</ul></div>' +
+            '</div>' : '') +
+            (r.body ?
+              '<div class="review-body-wrap">' +
+                '<span class="review-body-label">Full review</span>' +
+                '<div class="review-body-host" id="' + bodyId + '"></div>' +
+              '</div>'
+            : '');
+          listEl.appendChild(card);
+
           if (r.body) {
             try {
-              new toastui.Editor({ el: document.getElementById('body-'+r.slug), initialValue: r.body });
+              new toastui.Editor({ el: document.getElementById(bodyId), initialValue: r.body });
             } catch (e) {
-              document.getElementById('body-'+r.slug).textContent = r.body;
+              const host = document.getElementById(bodyId);
+              if (host) host.textContent = r.body;
             }
           }
         });
       } catch (err) {
-        document.getElementById('main').innerHTML = '<h1>Not found</h1><p>No reviews for this subject yet. <a href="compose.html?kind='+esc(kind)+'&subject_slug='+encodeURIComponent(subjectSlug)+'">Write the first one →</a></p>';
+        document.title = 'Not found — EndoWiki';
+        mainEl.innerHTML =
+          '<nav class="breadcrumb" aria-label="Breadcrumb">' +
+            '<a href="/">EndoWiki</a>' +
+            '<span class="sep" aria-hidden="true">›</span>' +
+            '<span aria-current="page">Reviews</span>' +
+          '</nav>' +
+          '<div class="error-state">' +
+            '<h1>No reviews here yet</h1>' +
+            '<p>Be the first to review this ' + (kind === 'course' ? 'course' : 'product') + '.</p>' +
+            '<p style="margin-top:var(--s5);">' +
+              '<a href="compose.html?kind=' + esc(kind) +
+                '&subject_slug=' + encodeURIComponent(subjectSlug) +
+                '" style="color:var(--oxblood);font-weight:700;">Write the first review →</a>' +
+            '</p>' +
+          '</div>';
       }
     })();
   </script>
