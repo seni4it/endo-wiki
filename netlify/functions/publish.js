@@ -1,20 +1,19 @@
 // POST /api/publish
 //
-// Authenticated endpoint: logged-in, email-verified user creates or updates
-// an article / review. Storage: Netlify Blobs store "content".
+// Authenticated endpoint. Stores entries in Netlify Blobs.
 //
-// ── Security ──────────────────────────────────────────────────────────
-// Auth: context.clientContext.user is populated by Netlify when a valid
-//   Identity JWT is passed in the Authorization header. Netlify only issues
-//   JWTs to email-confirmed users, so anonymous and unconfirmed accounts
-//   cannot reach the rest of this function.
-// Authorization: row-level ownership — only the original author can update
-//   an existing entry with the same slug.
-// Rate limit: 20 entries per rolling hour per user (prevents abuse).
-// Size limits: 200 KB body prose, 2 MB total payload (incl. small images).
-// ──────────────────────────────────────────────────────────────────────
+// Slug strategy for reviews:
+//   - `subject_slug` = base slug derived from the title (shared across reviewers)
+//   - `slug`         = `<subject_slug>--by-<author-hint>` (unique per author)
+// This lets multiple people review the same motor / course / microscope and
+// all their reviews are grouped under the same subject page (/p/<subject_slug>).
+//
+// Auth: we decode the Netlify Identity JWT from the Authorization header
+// because context.clientContext.user is unreliable in v2 Functions. See
+// _lib/identity.js for the full rationale.
 
 import { getStore } from "@netlify/blobs";
+import { getIdentityUser } from "./_lib/identity.js";
 
 const VALID_KINDS = new Set(["article", "course", "equipment"]);
 const MAX_BODY_BYTES = 200 * 1024;
@@ -46,21 +45,14 @@ export default async (req, context) => {
     return json(405, { error: "Method not allowed" });
   }
 
-  // Auth check
-  const user = context.clientContext?.user;
+  const user = getIdentityUser(req, context);
   if (!user || !user.sub) {
     return json(401, { error: "Please log in to publish." });
   }
-
-  // Defense-in-depth: require email to be confirmed. Netlify won't issue a JWT
-  // to an unconfirmed user by default, but this guards against misconfiguration.
-  // Netlify populates `email` only for confirmed users; `app_metadata.provider`
-  // also tells us which auth path the user took.
   if (!user.email) {
     return json(403, { error: "Please confirm your email before publishing." });
   }
 
-  // Size guard (body read as text, then JSON-parsed)
   const text = await req.text();
   if (text.length > MAX_TOTAL_BYTES) {
     return json(413, { error: "Entry is too large (> 2 MB including images)." });
@@ -99,7 +91,7 @@ export default async (req, context) => {
 
   const store = getStore("content");
 
-  // ── Rate limiting (per-user, per-hour) ─────────────────────────────
+  // Rate limiting
   const hourBucket = Math.floor(Date.now() / 3600000);
   const rateKey = `__rate/${user.sub}/${hourBucket}`;
   const rateRec = (await store.get(rateKey, { type: "json" })) || { count: 0 };
@@ -111,17 +103,25 @@ export default async (req, context) => {
     });
   }
 
-  const authorName = user.user_metadata?.full_name || user.email.split("@")[0] || "Anonymous";
+  const authorName =
+    user.full_name ||
+    user.user_metadata?.full_name ||
+    (user.email ? user.email.split("@")[0] : "Anonymous");
   const authorEmail = user.email;
   const now = new Date().toISOString();
 
-  const baseSlug = slugify(payload.slug || title) || "untitled";
-  const authorSuffix = slugify(authorName).split("-").slice(0, 2).join("-") || user.sub.slice(0, 6);
-  const slug = `${baseSlug}--by-${authorSuffix}`;
+  // Subject slug — shared across reviewers writing about the same thing.
+  // For articles, there's no author suffix (articles are collaborative later,
+  // but for now one entry per title+author).
+  const subjectSlug = slugify(payload.subject_slug || title) || "untitled";
+  const authorSuffix = (slugify(authorName).split("-").slice(0, 2).join("-") || user.sub.slice(0, 6));
+  const slug =
+    kind === "article"
+      ? `${subjectSlug}--by-${authorSuffix}`
+      : `${subjectSlug}--by-${authorSuffix}`;
 
   const key = `${kind}/${slug}`;
 
-  // Row-level ownership: only original author can update
   const existing = await store.get(key, { type: "json" });
   if (existing && existing.author_id !== user.sub) {
     return json(403, {
@@ -134,6 +134,7 @@ export default async (req, context) => {
   const record = {
     kind,
     slug,
+    subject_slug: subjectSlug,
     title: title.trim(),
     body: body,
     author_id: user.sub,
@@ -167,12 +168,13 @@ export default async (req, context) => {
 
   await store.setJSON(key, record);
 
-  // Maintain a lightweight index for listing
+  // Per-kind index (for listings)
   const indexKey = `__index/${kind}`;
   const index = (await store.get(indexKey, { type: "json" })) || { items: [] };
   const existingIdx = index.items.findIndex((it) => it.slug === slug);
   const summary = {
     slug,
+    subject_slug: subjectSlug,
     title: record.title,
     author_name: record.author_name,
     updated_at: record.updated_at,
@@ -183,14 +185,67 @@ export default async (req, context) => {
   index.items = index.items.slice(0, 500);
   await store.setJSON(indexKey, index);
 
-  // Increment rate counter AFTER successful write
+  // Per-subject index (for "all reviews of X" page) — only for reviews
+  if (kind !== "article") {
+    const subjectKey = `__subject/${kind}/${subjectSlug}`;
+    const subject = (await store.get(subjectKey, { type: "json" })) || {
+      kind,
+      subject_slug: subjectSlug,
+      display_title: record.title,
+      reviews: [],
+    };
+    // Upsert this author's review in the subject's list
+    const i = subject.reviews.findIndex((r) => r.author_id === user.sub);
+    const reviewSummary = {
+      slug,
+      author_id: user.sub,
+      author_name: record.author_name,
+      rating: record.rating,
+      verdict: record.verdict,
+      updated_at: record.updated_at,
+    };
+    if (i >= 0) subject.reviews[i] = reviewSummary;
+    else subject.reviews.unshift(reviewSummary);
+
+    // Recompute average rating
+    const ratings = subject.reviews.map((r) => Number(r.rating) || 0).filter((r) => r > 0);
+    subject.avg_rating =
+      ratings.length > 0
+        ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
+        : null;
+    subject.review_count = subject.reviews.length;
+    // Keep the most recent non-empty title as the display title
+    subject.display_title = record.title;
+    subject.updated_at = now;
+    await store.setJSON(subjectKey, subject);
+
+    // Per-kind subject index (for browse page later)
+    const subjectIndexKey = `__index/subjects/${kind}`;
+    const subjectIndex = (await store.get(subjectIndexKey, { type: "json" })) || { items: [] };
+    const j = subjectIndex.items.findIndex((s) => s.subject_slug === subjectSlug);
+    const subjectSummary = {
+      subject_slug: subjectSlug,
+      display_title: subject.display_title,
+      avg_rating: subject.avg_rating,
+      review_count: subject.review_count,
+      updated_at: subject.updated_at,
+    };
+    if (j >= 0) subjectIndex.items[j] = subjectSummary;
+    else subjectIndex.items.unshift(subjectSummary);
+    subjectIndex.items = subjectIndex.items.slice(0, 500);
+    await store.setJSON(subjectIndexKey, subjectIndex);
+  }
+
+  // Increment rate counter on success
   rateRec.count += 1;
   await store.setJSON(rateKey, rateRec);
 
   return json(200, {
     ok: true,
     slug,
+    subject_slug: subjectSlug,
     path: `/${kind === "article" ? "a" : "r"}/${slug}`,
+    subject_path: kind !== "article" ? `/p/${kind}/${subjectSlug}` : null,
   });
 };
 

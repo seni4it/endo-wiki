@@ -21,12 +21,24 @@
   }
 
   // ---------- URL params (prefill) ----------
+  // Supports: ?kind=course|equipment|article
+  //           &title=...        (e.g. from "Add your review" on a subject page)
+  //           &subject_slug=... (groups this review with others for the same item)
   const params = new URLSearchParams(location.search);
   const prefillKind = params.get("kind");
   if (prefillKind && ["article", "course", "equipment"].includes(prefillKind)) {
     const radio = document.querySelector(`input[name="kind"][value="${prefillKind}"]`);
     if (radio) radio.checked = true;
   }
+  const prefillTitle = params.get("title");
+  if (prefillTitle) {
+    // Defer to let the DOM settle
+    setTimeout(() => {
+      const t = document.getElementById("title");
+      if (t && !t.value) t.value = prefillTitle;
+    }, 50);
+  }
+  const prefillSubjectSlug = params.get("subject_slug") || "";
 
   // ---------- Toast UI Editor ----------
   let editor = null;
@@ -213,6 +225,7 @@
 
     const base = { kind, title, body };
     let payload;
+    if (kind !== "article" && prefillSubjectSlug) base.subject_slug = prefillSubjectSlug;
     if (kind === "course") {
       payload = {
         ...base,
@@ -322,8 +335,9 @@
         btn.textContent = originalLabel;
         return;
       }
-      // Success — redirect to the new entry
-      location.href = result.path;
+      // Success — for reviews, send the author to the subject page so they see
+      // their review alongside anyone else's. For articles, go to the article.
+      location.href = result.subject_path || result.path;
     } catch (e) {
       alert("Publish failed: " + e.message);
       btn.disabled = false;

@@ -59,6 +59,12 @@
   to = "/review.html?slug=:splat"
   status = 200
 
+# Subject pages: /p/:kind/:subject_slug — aggregates all reviews for one thing
+[[redirects]]
+  from = "/p/*"
+  to = "/subject.html"
+  status = 200
+
 # The old Decap CMS admin directory is gone — redirect to the composer
 [[redirects]]
   from = "/admin"

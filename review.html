@@ -185,6 +185,19 @@
 
             '</div>' + // /review-hero-card
 
+            // "See all reviews of this" link (works whether or not other
+            // reviews exist — subject page aggregates automatically)
+            (function () {
+              var subj = r.subject_slug || (r.slug || '').split('--by-')[0];
+              if (!subj) return '';
+              return '<div class="subject-link anim-fade-up anim-delay-2" style="margin:var(--s4) 0 var(--s5);padding:var(--s4) var(--s5);background:white;border:1px solid var(--border);border-left:3px solid var(--oxblood);border-radius:var(--r-sm);display:flex;justify-content:space-between;align-items:center;gap:var(--s3);flex-wrap:wrap;">' +
+                '<span style="font-family:var(--font-ui);font-size:14px;color:var(--ink-muted);">Multiple endodontists can review the same ' + (kind === 'course' ? 'course' : 'product') + '.</span>' +
+                '<a href="/p/' + esc(kind) + '/' + esc(subj) + '" style="font-family:var(--font-ui);font-size:14px;font-weight:700;color:var(--oxblood);text-decoration:none;white-space:nowrap;">' +
+                'See all reviews of ' + esc(r.title.length > 40 ? r.title.slice(0, 40) + '…' : r.title) + ' →' +
+                '</a>' +
+              '</div>';
+            })() +
+
             // Body
             (r.body ?
               '<div class="review-body anim-fade-up anim-delay-2">' +
