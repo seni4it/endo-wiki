@@ -47,7 +47,30 @@
         Honest reviews of every course and piece of equipment that matters.
         Written by specialists, for specialists.
       </p>
-      <div class="home-hero-actions anim-fade-up anim-delay-2">
+
+      <!-- Big centered hero search — the primary way in to everything. -->
+      <form class="hero-search anim-fade-up anim-delay-2" role="search" action="/search.html" method="get">
+        <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.75" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <input type="search" name="q" aria-label="Search EndoWiki"
+          placeholder="Search articles, courses, equipment…"
+          autocomplete="off" />
+        <button type="submit" class="hero-search-submit">
+          <span>Search</span>
+          <kbd class="hero-search-kbd" aria-hidden="true">Enter</kbd>
+        </button>
+      </form>
+      <div class="hero-search-hints anim-fade-up anim-delay-2" aria-hidden="true">
+        Try
+        <a href="/search.html?q=hypochlorite">hypochlorite</a>
+        <a href="/search.html?q=apex%20locator">apex locator</a>
+        <a href="/search.html?q=microscope">microscope</a>
+        <a href="/search.html?q=rotary">rotary</a>
+      </div>
+
+      <div class="home-hero-actions anim-fade-up anim-delay-3">
         <a class="btn-hero-primary" href="#articles">Browse articles</a>
         <a class="btn-hero-ghost" href="#courses">See course reviews</a>
       </div>
