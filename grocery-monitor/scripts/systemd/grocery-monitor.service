@@ -1,0 +1,11 @@
+[Unit]
+Description=Grocery price monitor (one run)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Adjust User and paths to your environment:
+User=youruser
+WorkingDirectory=/path/to/grocery-monitor
+ExecStart=/path/to/grocery-monitor/scripts/run_monitor.sh

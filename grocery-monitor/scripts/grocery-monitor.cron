@@ -1,0 +1,10 @@
+# Example crontab entries for the grocery monitor.
+# Install with:  crontab -e   (paste a line below, fixing the path)
+#
+# Fields:  minute hour day-of-month month day-of-week  command
+#
+# Run every day at 07:00 local time:
+0 7 * * *   /path/to/grocery-monitor/scripts/run_monitor.sh >> /path/to/grocery-monitor/logs/cron.log 2>&1
+#
+# Or run every Monday at 06:30 (weekly):
+# 30 6 * * 1 /path/to/grocery-monitor/scripts/run_monitor.sh >> /path/to/grocery-monitor/logs/cron.log 2>&1

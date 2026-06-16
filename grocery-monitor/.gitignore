@@ -1,0 +1,15 @@
+# Local runtime data and secrets -- keep examples, ignore live files
+config.json
+data/shopping_list.json
+data/baselines.json
+data/price_history.csv
+data/orders/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/

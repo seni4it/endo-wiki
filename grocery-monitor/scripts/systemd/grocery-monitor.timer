@@ -1,0 +1,15 @@
+[Unit]
+Description=Run the grocery price monitor daily
+
+[Timer]
+# Daily at 07:00; use OnCalendar=Mon *-*-* 06:30:00 for weekly instead.
+OnCalendar=*-*-* 07:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
+# Install:
+#   sudo cp scripts/systemd/grocery-monitor.* /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now grocery-monitor.timer
