@@ -10,6 +10,11 @@
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
+  // Max length of an embedded `data:image/...` URI, matching the server's
+  // limit in netlify/functions/publish.js. Base64 inflates raw bytes by ~33%,
+  // so this comfortably holds a ~400 KB photo once encoded.
+  const MAX_IMAGE_DATAURI_BYTES = 560 * 1024;
+
   function slugify(str) {
     return String(str || "")
       .toLowerCase()
@@ -53,7 +58,17 @@
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => callback(e.target.result, blob.name || "image");
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      if (dataUrl.length > MAX_IMAGE_DATAURI_BYTES) {
+        alert(
+          "That image is too large to embed once encoded — please compress it " +
+          "(try tinypng.com) or upload it to a free image host and paste the URL."
+        );
+        return;
+      }
+      callback(dataUrl, blob.name || "image");
+    };
     reader.onerror = () => alert("Couldn't read that image. Try a different file.");
     reader.readAsDataURL(blob);
   }
@@ -182,7 +197,18 @@
     }
     const reader = new FileReader();
     reader.onload = (e) => {
-      imageDataUrl = e.target.result;
+      // Base64 inflates the file by ~33%; reject here if the encoded data URI
+      // would exceed the server's limit, so we don't silently lose the photo.
+      const dataUrl = e.target.result;
+      if (dataUrl.length > MAX_IMAGE_DATAURI_BYTES) {
+        alert(
+          "That image is too large to embed once encoded — please compress it " +
+          "to roughly 300 KB or less (try tinypng.com) or paste a URL instead."
+        );
+        $("#image-file").value = "";
+        return;
+      }
+      imageDataUrl = dataUrl;
       $("#image-url").value = "";
       showPreview(imageDataUrl);
     };

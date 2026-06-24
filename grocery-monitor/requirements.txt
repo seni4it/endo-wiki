@@ -1,0 +1,7 @@
+# Core runtime has NO third-party dependencies for the default 'mock' fetcher.
+# The following are only needed for the 'http' (BeautifulSoup) scraper fetcher:
+requests>=2.31
+beautifulsoup4>=4.12
+
+# Optional: Selenium-based fetching for JS-rendered pages (not used by default).
+# selenium>=4.18

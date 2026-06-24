@@ -1,0 +1,20 @@
+{
+  "currency": "USD",
+  "fetcher": "mock",
+  "amazon_fresh_base_url": "https://www.amazon.com/alm/storefront",
+  "request_timeout_seconds": 20,
+  "request_delay_seconds": 2.0,
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36",
+  "paths": {
+    "shopping_list": "data/shopping_list.json",
+    "baselines": "data/baselines.json",
+    "price_history": "data/price_history.csv",
+    "orders_dir": "data/orders",
+    "log_file": "logs/grocery_monitor.log"
+  },
+  "order": {
+    "cart_base_url": "https://www.amazon.com/gp/aws/cart/add.html",
+    "require_all_items": false,
+    "min_items_to_order": 1
+  }
+}

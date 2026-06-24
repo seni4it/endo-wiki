@@ -20,6 +20,37 @@ const MAX_BODY_BYTES = 200 * 1024;
 const MAX_TOTAL_BYTES = 2 * 1024 * 1024;
 const RATE_LIMIT_PER_HOUR = 20;
 
+// Hero images arrive as `data:image/...;base64,...` URIs. Base64 inflates the
+// raw bytes by ~33% (4/3) plus a short prefix, so a 400 KB photo becomes a
+// ~533 KB string. The client caps the *raw file* at 400 KB, so this cap must be
+// large enough to hold that file once encoded — otherwise valid uploads get
+// silently dropped. 560 KB leaves headroom for a 400 KB raw image.
+const MAX_IMAGE_DATAURI_BYTES = 560 * 1024;
+const MAX_IMAGE_URL_LEN = 500;
+
+// Validate/normalise a hero image value. Returns { value } on success (value
+// may be "" when none supplied) or { error } when a non-empty value was given
+// but is unusable — so the caller can surface it instead of dropping it.
+function normalizeImageUrl(raw) {
+  const v = typeof raw === "string" ? raw.trim() : "";
+  if (!v) return { value: "" };
+  if (v.startsWith("data:image/")) {
+    if (v.length <= MAX_IMAGE_DATAURI_BYTES) return { value: v };
+    return {
+      error:
+        "That photo is too large to embed (over ~400 KB). Please compress it " +
+        "(try tinypng.com) or paste an image URL instead.",
+    };
+  }
+  if (/^https:\/\/[^\s]+$/.test(v)) {
+    if (v.length <= MAX_IMAGE_URL_LEN) return { value: v };
+    return { error: "That image URL is too long (max 500 characters)." };
+  }
+  return {
+    error: "The photo must be an uploaded image or an https:// image URL.",
+  };
+}
+
 function slugify(s) {
   return String(s || "")
     .toLowerCase()
@@ -87,6 +118,13 @@ export default async (req, context) => {
     if (!(rating >= 1 && rating <= 5)) {
       return json(400, { error: "Please rate it 1–5 stars." });
     }
+  }
+
+  // Validate the hero image up front so an oversized/invalid photo is reported
+  // to the user instead of being silently discarded (reviews only).
+  const heroImage = normalizeImageUrl(kind !== "article" ? payload.image_url : "");
+  if (heroImage.error) {
+    return json(413, { error: heroImage.error });
   }
 
   const store = getStore("content");
@@ -163,16 +201,9 @@ export default async (req, context) => {
           model: typeof payload.model === "string" ? payload.model.slice(0, 100) : "",
           category: typeof payload.category === "string" ? payload.category.slice(0, 60) : "",
           duration_used: typeof payload.duration_used === "string" ? payload.duration_used.slice(0, 200) : "",
-          // Hero image. Two forms accepted:
-          //  - data:image/... URI (small; stored inline; ≤ 400 KB after base64)
-          //  - https://... URL (stored as-is)
-          image_url: (() => {
-            const v = typeof payload.image_url === "string" ? payload.image_url.trim() : "";
-            if (!v) return "";
-            if (v.startsWith("data:image/") && v.length <= 400 * 1024) return v;
-            if (/^https:\/\/[^\s]+$/.test(v) && v.length <= 500) return v;
-            return "";
-          })(),
+          // Hero image, already validated above (data:image/... URI stored
+          // inline, or an https:// URL stored as-is).
+          image_url: heroImage.value,
         }),
   };
 

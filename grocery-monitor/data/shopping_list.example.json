@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": "milk-whole-1gal",
+      "name": "Whole Milk, 1 Gallon",
+      "quantity": 1,
+      "search_term": "whole milk 1 gallon",
+      "asin": "B0EXAMPLE01",
+      "url": "https://www.amazon.com/dp/B0EXAMPLE01"
+    },
+    {
+      "id": "eggs-large-dozen",
+      "name": "Large Eggs, Dozen",
+      "quantity": 2,
+      "search_term": "large eggs dozen",
+      "asin": "B0EXAMPLE02",
+      "url": "https://www.amazon.com/dp/B0EXAMPLE02"
+    },
+    {
+      "id": "bananas-lb",
+      "name": "Bananas, per lb",
+      "quantity": 3,
+      "search_term": "bananas",
+      "asin": "B0EXAMPLE03",
+      "url": "https://www.amazon.com/dp/B0EXAMPLE03"
+    },
+    {
+      "id": "chicken-breast-lb",
+      "name": "Boneless Chicken Breast, per lb",
+      "quantity": 2,
+      "search_term": "boneless chicken breast",
+      "asin": "B0EXAMPLE04",
+      "url": "https://www.amazon.com/dp/B0EXAMPLE04"
+    }
+  ]
+}
