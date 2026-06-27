@@ -1,22 +1,24 @@
 <!DOCTYPE html><html lang=en><head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<title>Meriva B SUV Bed — 3D (verified dims)</title><style>
-html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,Arial,sans-serif;background:#1f2329;color:#eee}
-#ui{position:fixed;top:10px;left:10px;z-index:10;background:rgba(20,24,30,.85);padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.7;max-width:280px}
-#ui h1{font-size:15px;margin:0 0 6px} #ui label{display:block;cursor:pointer}
-#ui .hint{color:#9aa3ad;font-size:11px;margin-top:6px}
-.lbl{background:rgba(0,0,0,.6);color:#fff;padding:1px 5px;border-radius:4px;font-size:11px;white-space:nowrap}
-.dim{color:#ffd34d}
-#legend{position:fixed;bottom:10px;left:10px;z-index:10;background:rgba(20,24,30,.85);padding:10px 12px;border-radius:10px;font-size:12px}
-.sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:4px;vertical-align:middle}
+<meta name=viewport content="width=device-width,initial-scale=1"><title>Meriva Bed — Folded / Open</title><style>
+html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,Arial,sans-serif;background:#20242b;color:#eee}
+#ui{position:fixed;top:10px;left:10px;z-index:10;background:rgba(18,22,28,.9);padding:12px 14px;border-radius:10px;font-size:13px;max-width:260px}
+#ui h1{font-size:15px;margin:0 0 8px}
+button{background:#2c333d;color:#eee;border:1px solid #444;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:13px;margin-right:6px}
+button.on{background:#3a7bd5;border-color:#3a7bd5;font-weight:bold}
+#ui label{display:block;margin-top:8px;cursor:pointer}
+.hint{color:#9aa3ad;font-size:11px;margin-top:8px;line-height:1.5}
+.lbl{background:rgba(0,0,0,.62);color:#fff;padding:1px 6px;border-radius:4px;font-size:11px;white-space:nowrap}
+#info{position:fixed;top:10px;right:10px;z-index:10;background:rgba(18,22,28,.9);padding:10px 14px;border-radius:10px;font-size:13px;min-width:170px}
+#parts{position:fixed;bottom:10px;left:10px;z-index:10;background:rgba(18,22,28,.9);padding:10px 12px;border-radius:10px;font-size:11.5px;max-height:42vh;overflow:auto;max-width:260px}
+#parts b{font-size:12px} .pl{display:flex;justify-content:space-between;gap:10px;padding:1px 0;border-bottom:1px solid #2c333d}
+.pl span{color:#ffd34d}
 </style></head><body>
-<div id=ui><h1>Meriva B — SUV Bed (verified)</h1>
-<label><input type=checkbox id=cCar checked> Car interior (folded seats)</label>
-<label><input type=checkbox id=cLabels checked> Dimension labels</label>
-<label><input type=checkbox id=cTable checked> Table slid out</label>
-<label><input type=checkbox id=cExplode> Explode parts</label>
-<div class=hint>1030w · 150h open · base 660 · bed 1800 mm · folds (stacked) into 660 trunk. Drag=rotate · scroll=zoom.</div></div>
-<div id=legend></div>
+<div id=ui><h1>Meriva Bed — 3D</h1>
+<button id=mOpen class=on>Open (bed)</button><button id=mFold>Folded (in trunk)</button>
+<label><input type=checkbox id=cLabels checked> Show dimension labels</label>
+<div class=hint><b>Click any panel</b> to see its name &amp; size (top-right).<br>Drag=rotate · scroll=zoom · right-drag=pan.</div></div>
+<div id=info>Click a panel to see its name &amp; size</div>
+<div id=parts><b>All panels (size mm)</b><div id=plist></div></div>
 <script>/**
  * @license
  * Copyright 2010-2021 Three.js Authors
@@ -1263,85 +1265,97 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,Arial,sans-
 
 } )();
 </script><script>
-// three: x=width(across), y=up, z=length(0 tailgate -> +z front). units = mm/1000
+// units = mm/1000. x=width, y=up, z=length(0 tailgate -> +z front)
 const m=v=>v/1000;
-const scene=new THREE.Scene(); scene.background=new THREE.Color(0x1f2329);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x20242b);
 const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.01,100);
-camera.position.set(2.0,1.5,2.4);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(devicePixelRatio);
-document.body.appendChild(renderer.domElement);
-const lr=new THREE.CSS2DRenderer(); lr.setSize(innerWidth,innerHeight);
-lr.domElement.style.position='fixed'; lr.domElement.style.top='0'; lr.domElement.style.pointerEvents='none';
-document.body.appendChild(lr.domElement);
-const controls=new THREE.OrbitControls(camera,renderer.domElement);
-controls.target.set(0,0.1,0.9); controls.update();
-scene.add(new THREE.HemisphereLight(0xffffff,0x333740,1.15));
-const d=new THREE.DirectionalLight(0xffffff,1.3); d.position.set(3,5,2); scene.add(d);
+camera.position.set(2.1,1.6,2.6);
+const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(innerWidth,innerHeight); R.setPixelRatio(devicePixelRatio);
+document.body.appendChild(R.domElement);
+const LR=new THREE.CSS2DRenderer(); LR.setSize(innerWidth,innerHeight);
+LR.domElement.style.cssText='position:fixed;top:0;left:0;pointer-events:none'; document.body.appendChild(LR.domElement);
+const ctr=new THREE.OrbitControls(camera,R.domElement); ctr.target.set(0,0.1,0.9); ctr.update();
+scene.add(new THREE.HemisphereLight(0xffffff,0x33373f,1.15));
+const dl=new THREE.DirectionalLight(0xffffff,1.3); dl.position.set(3,5,2); scene.add(dl);
 scene.add(new THREE.GridHelper(6,24,0x444a52,0x33383f));
-const bedG=new THREE.Group(),carG=new THREE.Group(),labG=new THREE.Group(); scene.add(bedG,carG,labG);
 
-// ---- verified Meriva params (mm) ----
-const HW=515,U=132,Tt=18,legH=132, BD=660,MD=570,HD=570, TW=970,TD=540;
-const C={ply:0xcaa46a,base:0x4cd44c,mid:0x4059d9,head:0xf2d633,rail:0x1bb3a6,
- leg:0x2f7a33,bleg:0x3573d9,mleg:0x33d6d9,brace:0x8cd93f,tab:0xd98fd9,handle:0xe62626,
- small:0xf2b21a,car:0x3a3f47,seat:0x202327};
-function M(c,op){return new THREE.MeshStandardMaterial({color:c,roughness:.8,
+const COL={base:0x4cd44c,mid:0x4059d9,head:0xf2d633,table:0xd98fd9,leg:0x2f7a33,
+ mleg:0x33d6d9,rail:0x1bb3a6,brace:0x8cd93f,box:0xcaa46a,car:0x596170,arch:0x495060,seat:0x202327};
+function mkMat(c,op){return new THREE.MeshStandardMaterial({color:c,roughness:.8,
   transparent:op!==undefined,opacity:op===undefined?1:op,side:THREE.DoubleSide});}
-const MAT={}; for(const k in C) MAT[k]=M(C[k]); MAT.car=M(C.car,.26);
-function box(g,c,x0,y0,z0,dx,dy,dz){const ge=new THREE.BoxGeometry(m(dx),m(dy),m(dz));
- const me=new THREE.Mesh(ge,MAT[c]); me.position.set(m(x0+dx/2),m(y0+dy/2),m(z0+dz/2));
- me.add(new THREE.LineSegments(new THREE.EdgesGeometry(ge),
-   new THREE.LineBasicMaterial({color:0x000,transparent:true,opacity:.3}))); g.add(me); return me;}
-function lab(t,x,y,z){const e=document.createElement('div');e.className='lbl';e.innerHTML=t;
- const o=new THREE.CSS2DObject(e);o.position.set(m(x),m(y),m(z));labG.add(o);return o;}
+const openG=new THREE.Group(), foldG=new THREE.Group(), labO=new THREE.Group(), labF=new THREE.Group();
+scene.add(openG,foldG,labO,labF);
+const pickable=[];
+function panel(group,name,dims,c,x0,y0,z0,dx,dy,dz,op){
+ const g=new THREE.BoxGeometry(m(dx),m(dy),m(dz)); const me=new THREE.Mesh(g,mkMat(c,op));
+ me.position.set(m(x0+dx/2),m(y0+dy/2),m(z0+dz/2));
+ me.userData={name,dims,baseColor:c};
+ me.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({color:0x000,transparent:true,opacity:.3})));
+ group.add(me); if(op===undefined) pickable.push(me); return me;}
+function label(group,t,x,y,z){const d=document.createElement('div');d.className='lbl';d.innerHTML=t;
+ const o=new THREE.CSS2DObject(d);o.position.set(m(x),m(y),m(z));group.add(o);}
 
-// BED
-box(bedG,'base',-HW,U,0, 2*HW,Tt,BD);
-box(bedG,'mid',-HW,U,BD, 2*HW,Tt,MD);
-box(bedG,'head',-HW,U,BD+MD, 2*HW,Tt,HD);
-// legs
-[-1,1].forEach(s=>box(bedG,'leg', s>0?HW-50:-HW, 0, BD-18, 50,legH,18));        // front legs
-[-1,1].forEach(s=>box(bedG,'bleg', s>0?HW-18:-HW, 0, 0, 18,legH,100));          // back legs 4in
-[-1,1].forEach(s=>box(bedG,'bleg', s>0?HW-50:-HW, 0, 0, 50,legH,18));           // back legs 2in
-[-1,1].forEach(s=>box(bedG,'mleg', s>0?HW-114:-HW, 0, BD+MD-36, 114,legH,18));   // middle legs
-// rails x4 (table rests on these)
-[-1,1].forEach(s=>{ box(bedG,'rail', s>0?HW-100:-HW+50, 90, 15, 50,Tt,630);
-                    box(bedG,'rail', s>0?250:-300, 90, 15, 50,Tt,630); });
-// back brace + table + handle
-box(bedG,'brace',-HW,82,18, 2*HW,50,Tt);
-const tbl=box(bedG,'tab',-TW/2,108,-380, TW,Tt,TD);
-const hdl=box(bedG,'handle',-40,108,-400, 80,30,20);
-// CAR interior (folded seats)
-const CW=1120,CLEN=2400,CH=820;
-box(carG,'car',-CW/2,-Tt,-150, CW,Tt,CLEN);
-box(carG,'car',-CW/2-20,0,-150, 20,CH,CLEN); box(carG,'car',CW/2,0,-150, 20,CH,CLEN);
-[-1,1].forEach(s=>box(carG,'car', s>0?CW/2-150:-CW/2, 0, 120, 150,240,620));   // wheel arches
-box(carG,'seat',-CW/2+40,0,BD+MD-120, CW-80,legH-20,620);                      // folded seats
-[-1,1].forEach(s=>box(carG,'seat', s*330-230,0,BD+MD+HD+40, 460,620,520));     // front seats
+const HW=515,U=132,Tt=18,legH=132, BD=660,MD=570,HD=570, TW=970,TD=540;
+// ================= OPEN (sleeping) =================
+panel(openG,"Base Top","1030 × 660 × 18",COL.base,-HW,U,0, 2*HW,Tt,BD);
+panel(openG,"Middle Top","1030 × 570 × 18",COL.mid,-HW,U,BD, 2*HW,Tt,MD);
+panel(openG,"Headrest","1030 × 570 × 18",COL.head,-HW,U,BD+MD, 2*HW,Tt,HD);
+panel(openG,"Table Top","970 × 540 × 18",COL.table,-TW/2,108,-380, TW,Tt,TD);
+[-1,1].forEach(s=>panel(openG,"Front Leg","50 × 132",COL.leg, s>0?HW-50:-HW,0,BD-18, 50,legH,18));
+[-1,1].forEach(s=>panel(openG,"Back Leg (4in)","100 × 132",COL.leg, s>0?HW-18:-HW,0,0, 18,legH,100));
+[-1,1].forEach(s=>panel(openG,"Back Leg (2in)","50 × 132",COL.leg, s>0?HW-50:-HW,0,0, 50,legH,18));
+[-1,1].forEach(s=>panel(openG,"Middle Leg","114 × 132",COL.mleg, s>0?HW-114:-HW,0,BD+MD-36, 114,legH,18));
+[-1,1].forEach(s=>{panel(openG,"Table Rail","630 × 50",COL.rail, s>0?HW-100:-HW+50,90,15, 50,Tt,630);
+                   panel(openG,"Table Rail","630 × 50",COL.rail, s>0?250:-300,90,15, 50,Tt,630);});
+panel(openG,"Back Brace","1030 × 50",COL.brace,-HW,82,18, 2*HW,50,Tt);
+[["Base Top  1030×660",0,U+45,BD/2],["Middle  1030×570",0,U+45,BD+MD/2],
+ ["Headrest  1030×570",0,U+45,BD+MD+HD/2],["Table  970×540",0,108-55,-380+TD/2],
+ ["Width 1030",HW+70,U+45,BD/2],["Open height 150",HW,U/2,5],
+ ["BED LENGTH 1800 mm",0,U+150,(BD+MD+HD)/2]].forEach(a=>label(labO,a[0],a[1],a[2],a[3]));
 
-[[`BED LENGTH <span class=dim>1800</span> mm`,0,U+150,(BD+MD+HD)/2],
- [`Base <span class=dim>660</span>`,0,U+40,BD/2],[`Middle <span class=dim>830</span>`,0,U+40,BD+MD/2],
- [`Headrest <span class=dim>310</span>`,0,U+40,BD+MD+HD/2],
- [`Width <span class=dim>1030</span>`,HW+60,U+40,BD/2],
- [`Height <span class=dim>150</span>`,HW,U/2,5],
- [`Table <span class=dim>960×540</span>`,0,108-60,-380+TD/2],
- [`folded seats`,0,legH+40,BD+MD+200]
-].forEach(a=>lab(a[0],a[1],a[2],a[3]));
+// ================= FOLDED (stacked in trunk) =================
+panel(foldG,"Base box (deck + walls)","1030 × 660 × 150",COL.box,-HW,0,0, 2*HW,150,BD);
+panel(foldG,"Middle Top (stacked)","1030 × 570 × 18",COL.mid,-HW,150,0, 2*HW,Tt,MD);
+panel(foldG,"Headrest (stacked)","1030 × 570 × 18",COL.head,-HW,168,0, 2*HW,Tt,HD);
+for(let i=0;i<4;i++) panel(foldG,"Legs (folded)","6 × 50×132",COL.leg,-480+i*250,186,40, 60,24,520);
+// trunk shell (not pickable -> op set)
+panel(foldG,"Trunk floor","",COL.car,-660,-18,-200, 1320,18,1000,0.20);
+panel(foldG,"Wheel arch","",COL.arch, HW,0,0, 145,240,620,0.45);
+panel(foldG,"Wheel arch","",COL.arch,-660,0,0, 145,240,620,0.45);
+panel(foldG,"Rear seats (up)","",COL.seat,-560,0,BD, 1120,650,60,0.9);
+panel(foldG,"Side wall","",COL.car,-680,0,-200, 20,760,1000,0.12);
+panel(foldG,"Side wall","",COL.car, 660,0,-200, 20,760,1000,0.12);
+[["FOLDED 660 deep (= trunk)",0,260,BD/2],["fits the 1030 arch gap",0,300,120],
+ ["stack ~210 tall (taller ok)",HW+60,120,BD/2],
+ ["⚠ EXACT fit — trim ~10 mm for clearance",0,360,BD/2]].forEach(a=>label(labF,a[0],a[1],a[2],a[3]));
 
+// ================= UI / interaction =================
+foldG.visible=false; labF.visible=false;
 const $=i=>document.getElementById(i);
-$('cCar').onchange=e=>carG.visible=e.target.checked;
-$('cLabels').onchange=e=>labG.visible=e.target.checked;
-$('cTable').onchange=e=>{tbl.visible=e.target.checked;hdl.visible=e.target.checked;};
-let ex=false; $('cExplode').onchange=e=>{ex=e.target.checked;
- bedG.children.forEach((c,i)=>c.position.y+=(ex?(i%5)*0.12:-(i%5)*0.12));};
-$('legend').innerHTML='<b>Parts</b><br>'+
- '<span class=sw style="background:#4cd44c"></span>Base &nbsp;<span class=sw style="background:#4059d9"></span>Middle &nbsp;<span class=sw style="background:#f2d633"></span>Headrest<br>'+
- '<span class=sw style="background:#1bb3a6"></span>Rails &nbsp;<span class=sw style="background:#d98fd9"></span>Table &nbsp;<span class=sw style="background:#2f7a33"></span>Legs<br>'+
- '<span class=sw style="background:#3a3f47"></span>Car shell &nbsp;<span class=sw style="background:#202327"></span>Folded seats';
+function setMode(folded){ openG.visible=!folded; labO.visible=!folded&&$('cLabels').checked;
+ foldG.visible=folded; labF.visible=folded&&$('cLabels').checked;
+ ctr.target.set(0, folded?0.15:0.1, folded?0.33:0.9); }
+$('mOpen').onclick=()=>{$('mOpen').classList.add('on');$('mFold').classList.remove('on');setMode(false);};
+$('mFold').onclick=()=>{$('mFold').classList.add('on');$('mOpen').classList.remove('on');setMode(true);};
+$('cLabels').onchange=()=>setMode($('mFold').classList.contains('on'));
+// click to identify
+const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(); let sel=null;
+R.domElement.addEventListener('click',e=>{
+ mouse.x=e.clientX/innerWidth*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+ ray.setFromCamera(mouse,camera);
+ const vis=pickable.filter(o=>o.visible&&o.parent.visible);
+ const hit=ray.intersectObjects(vis,false);
+ if(sel){sel.material.emissive.setHex(0x000000);sel=null;}
+ if(hit.length){sel=hit[0].object; sel.material.emissive=new THREE.Color(0x333300);
+  $('info').innerHTML='<b>'+sel.userData.name+'</b><br>'+(sel.userData.dims||'')+' mm';}
+ else $('info').innerHTML='Click a panel to see its name &amp; size';
+});
+// parts list
+const seen={}; pickable.forEach(o=>{const k=o.userData.name; if(!seen[k]&&o.userData.dims) seen[k]=o.userData.dims;});
+$('plist').innerHTML=Object.keys(seen).map(k=>`<div class=pl>${k} <span>${seen[k]}</span></div>`).join('');
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);lr.setSize(innerWidth,innerHeight);});
-(function loop(){requestAnimationFrame(loop);controls.update();
- renderer.render(scene,camera);lr.render(scene,camera);})();
+ R.setSize(innerWidth,innerHeight);LR.setSize(innerWidth,innerHeight);});
+setMode(false);
+(function loop(){requestAnimationFrame(loop);ctr.update();R.render(scene,camera);LR.render(scene,camera);})();
 </script>
 </body></html>
