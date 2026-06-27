@@ -15,7 +15,7 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,Arial,sans-
 <label><input type=checkbox id=cLabels checked> Dimension labels</label>
 <label><input type=checkbox id=cTable checked> Table slid out</label>
 <label><input type=checkbox id=cExplode> Explode parts</label>
-<div class=hint>1020w · 150h · base 660 · bed 1800 mm. Drag=rotate · scroll=zoom · right-drag=pan.</div></div>
+<div class=hint>1030w · 150h open · base 660 · bed 1800 mm · folds (stacked) into 660 trunk. Drag=rotate · scroll=zoom.</div></div>
 <div id=legend></div>
 <script>/**
  * @license
@@ -1282,7 +1282,7 @@ scene.add(new THREE.GridHelper(6,24,0x444a52,0x33383f));
 const bedG=new THREE.Group(),carG=new THREE.Group(),labG=new THREE.Group(); scene.add(bedG,carG,labG);
 
 // ---- verified Meriva params (mm) ----
-const HW=510,U=132,Tt=18,legH=132, BD=660,MD=830,HD=310, TW=960,TD=540;
+const HW=515,U=132,Tt=18,legH=132, BD=660,MD=570,HD=570, TW=970,TD=540;
 const C={ply:0xcaa46a,base:0x4cd44c,mid:0x4059d9,head:0xf2d633,rail:0x1bb3a6,
  leg:0x2f7a33,bleg:0x3573d9,mleg:0x33d6d9,brace:0x8cd93f,tab:0xd98fd9,handle:0xe62626,
  small:0xf2b21a,car:0x3a3f47,seat:0x202327};
@@ -1301,12 +1301,12 @@ box(bedG,'base',-HW,U,0, 2*HW,Tt,BD);
 box(bedG,'mid',-HW,U,BD, 2*HW,Tt,MD);
 box(bedG,'head',-HW,U,BD+MD, 2*HW,Tt,HD);
 // legs
-[-1,1].forEach(s=>box(bedG,'leg', s>0?460:-510, 0, BD-18, 50,legH,18));        // front legs
-[-1,1].forEach(s=>box(bedG,'bleg', s>0?492:-510, 0, 0, 18,legH,100));          // back legs 4in
-[-1,1].forEach(s=>box(bedG,'bleg', s>0?460:-510, 0, 0, 50,legH,18));           // back legs 2in
-[-1,1].forEach(s=>box(bedG,'mleg', s>0?396:-510, 0, BD+MD-36, 114,legH,18));   // middle legs
+[-1,1].forEach(s=>box(bedG,'leg', s>0?HW-50:-HW, 0, BD-18, 50,legH,18));        // front legs
+[-1,1].forEach(s=>box(bedG,'bleg', s>0?HW-18:-HW, 0, 0, 18,legH,100));          // back legs 4in
+[-1,1].forEach(s=>box(bedG,'bleg', s>0?HW-50:-HW, 0, 0, 50,legH,18));           // back legs 2in
+[-1,1].forEach(s=>box(bedG,'mleg', s>0?HW-114:-HW, 0, BD+MD-36, 114,legH,18));   // middle legs
 // rails x4 (table rests on these)
-[-1,1].forEach(s=>{ box(bedG,'rail', s>0?410:-460, 90, 15, 50,Tt,630);
+[-1,1].forEach(s=>{ box(bedG,'rail', s>0?HW-100:-HW+50, 90, 15, 50,Tt,630);
                     box(bedG,'rail', s>0?250:-300, 90, 15, 50,Tt,630); });
 // back brace + table + handle
 box(bedG,'brace',-HW,82,18, 2*HW,50,Tt);
@@ -1323,7 +1323,7 @@ box(carG,'seat',-CW/2+40,0,BD+MD-120, CW-80,legH-20,620);                      /
 [[`BED LENGTH <span class=dim>1800</span> mm`,0,U+150,(BD+MD+HD)/2],
  [`Base <span class=dim>660</span>`,0,U+40,BD/2],[`Middle <span class=dim>830</span>`,0,U+40,BD+MD/2],
  [`Headrest <span class=dim>310</span>`,0,U+40,BD+MD+HD/2],
- [`Width <span class=dim>1020</span>`,HW+60,U+40,BD/2],
+ [`Width <span class=dim>1030</span>`,HW+60,U+40,BD/2],
  [`Height <span class=dim>150</span>`,HW,U/2,5],
  [`Table <span class=dim>960×540</span>`,0,108-60,-380+TD/2],
  [`folded seats`,0,legH+40,BD+MD+200]
